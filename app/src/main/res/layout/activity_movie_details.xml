@@ -185,7 +185,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cast"
             app:layout_constraintBottom_toTopOf="@id/first_actor_text"
-       />
+            />
 
         <TextView
             android:layout_width="0dp"
