@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/main_background_color"
+    android:orientation="vertical"
     tools:context=".FragmentMoviesList">
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/main_background_color"
-        android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,31 +19,35 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin_start"
             android:layout_marginTop="@dimen/extra_big_margin"
+            android:layout_marginBottom="@dimen/default_margin_start"
             android:drawableStart="@drawable/ic_movies_list_icon"
             android:drawablePadding="@dimen/medium_margin"
             android:text="@string/movies_list_title"
             android:textColor="@color/white"
             android:textSize="@dimen/movies_list_text_size"
             android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_movie_card"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/movie_card"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
+            android:layout_marginStart="@dimen/fourteen_dp_margin"
+            android:layout_marginTop="@dimen/default_margin_start"
             android:background="@color/main_background_color"
             android:outlineAmbientShadowColor="@color/white"
+            app:cardBackgroundColor="@color/main_background_color"
             app:cardCornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/guideline_movie_card"
-            >
+            app:layout_constraintTop_toTopOf="@id/guideline_movie_card">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/main_background_color">
+                android:layout_height="match_parent">
 
                 <ImageView
                     android:id="@+id/movie_poster"
@@ -55,72 +55,83 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/two_dp_margin"
                     android:src="@drawable/movie_poster"
+                    app:layout_constraintBottom_toTopOf="@id/title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/title"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                        <TextView
-                            android:id="@+id/age_category"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/default_margin_start"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_margin="@dimen/medium_margin"
-                            android:background="@drawable/bg_rounded"
-                            android:text="@string/age_category"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/default_text_size"
-                            android:textStyle="bold"
-                            android:padding="@dimen/extra_small_margin"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintCircleRadius="@dimen/medium_margin"
-                            />
-
-                <CheckBox
+                <TextView
+                    android:id="@+id/age_category"
                     android:layout_width="wrap_content"
-                    android:layout_height="28dp"
-                    android:button="@drawable/ic_baseline_favorite_border_24"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/actor_margin_top"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:background="@drawable/bg_rounded"
+                    android:padding="@dimen/extra_small_margin"
+                    android:text="@string/age_category"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/default_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@id/age_category_guideline"
+                    app:layout_constraintCircleRadius="@dimen/medium_margin"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/age_category_guideline"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/genres_guideline"
                     android:orientation="horizontal"
-                    app:layout_constraintGuide_percent="0.73"/>
+                    app:layout_constraintGuide_percent="0.11" />
+
+                <CheckBox
+                    android:layout_width="@dimen/default_margin_start"
+                    android:layout_height="0dp"
+                    android:layout_marginVertical="@dimen/five_dp_margin"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:layout_marginEnd="@dimen/actor_margin_top"
+                    android:button="@drawable/ic_baseline_favorite_16"
+                    android:buttonTint="@color/like_color"
+                    app:layout_constraintBottom_toBottomOf="@id/age_category"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/age_category" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/genres_guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent="0.73" />
 
                 <TextView
                     android:id="@+id/genres"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/actor_label_margin_top"
-                    app:layout_constraintTop_toTopOf="@id/genres_guideline"
                     android:text="@string/genres"
                     android:textColor="@color/rating_and_genre_color"
                     android:textSize="@dimen/small_genres_text_size"
                     app:layout_constraintBottom_toTopOf="@id/movie_rating"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/movie_poster" />
+                    app:layout_constraintStart_toStartOf="@id/movie_poster"
+                    app:layout_constraintTop_toTopOf="@id/genres_guideline" />
 
-               <androidx.appcompat.widget.AppCompatRatingBar
-                   android:id="@+id/movie_rating"
+                <androidx.appcompat.widget.AppCompatRatingBar
+                    android:id="@+id/movie_rating"
                     style="@style/RatingBarSmallest"
                     android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:layout_marginBottom="@dimen/ten_dp_margin"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/ten_dp_margin"
                     android:isIndicator="true"
                     android:numStars="5"
-                   android:progressBackgroundTint="@color/back_button_color"
-                   android:progressTint="@color/rating_and_genre_color"
-                   android:rating="4"
+                    android:progressBackgroundTint="@color/back_button_color"
+                    android:progressTint="@color/rating_and_genre_color"
+                    android:rating="4"
                     android:stepSize="0.5"
-                   app:layout_constraintStart_toStartOf="@id/genres"
-                    app:layout_constraintTop_toTopOf="@id/reviews"
                     app:layout_constraintBottom_toBottomOf="@id/movie_poster"
-                   app:layout_constraintEnd_toStartOf="@id/reviews"
-                />
+                    app:layout_constraintEnd_toStartOf="@id/reviews"
+                    app:layout_constraintStart_toStartOf="@id/genres"
+                    app:layout_constraintTop_toTopOf="@id/reviews" />
 
 
                 <TextView
@@ -128,11 +139,11 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/actor_margin_top"
-                    android:text="@string/reviews"
                     android:layout_marginTop="@dimen/two_dp_margin"
-                    android:textStyle="bold"
-                    android:textSize="@dimen/small_genres_text_size"
+                    android:text="@string/reviews"
                     android:textColor="@color/back_button_color"
+                    android:textSize="@dimen/small_genres_text_size"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@id/movie_rating"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/movie_rating"
@@ -149,26 +160,25 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/movies_list_text_size"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/duration"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/movie_poster"
-                    app:layout_constraintBottom_toTopOf="@+id/duration"
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/movie_poster" />
 
                 <TextView
+                    android:id="@+id/duration"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:id="@+id/duration"
-                    android:textSize="@dimen/small_genres_text_size"
-                    android:layout_marginBottom="@dimen/medium_margin"
                     android:layout_marginEnd="@dimen/medium_margin"
-                    app:layout_constraintTop_toBottomOf="@id/title"
-                    android:textStyle="bold"
+                    android:layout_marginBottom="@dimen/medium_margin"
+                    android:text="@string/duration"
                     android:textColor="@color/back_button_color"
+                    android:textSize="@dimen/small_genres_text_size"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="@id/title"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:text="137 min"/>
+                    app:layout_constraintStart_toStartOf="@id/title"
+                    app:layout_constraintTop_toBottomOf="@id/title" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -179,14 +189,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.27" />
-
-
-
-
+            app:layout_constraintGuide_percent="0.23" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </ScrollView>
-
-</FrameLayout>
+</ScrollView>
