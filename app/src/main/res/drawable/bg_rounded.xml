@@ -1,0 +1,16 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <stroke
+        android:color="@color/black" />
+
+    <padding
+        android:left="@dimen/extra_small_margin"
+        android:right="@dimen/extra_small_margin"
+        android:bottom="@dimen/extra_small_margin"
+        android:top="@dimen/extra_small_margin" />
+
+    <solid android:color="@color/black" />
+
+    <corners
+        android:radius="@dimen/actor_margin_top"
+        />
+</shape>
