@@ -8,8 +8,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bashkevich.androidfundamentals.data.MoviesList
 
 class FragmentMoviesList : Fragment() {
+    private var recyclerView: RecyclerView? = null
+
 
 
 
@@ -20,15 +25,23 @@ class FragmentMoviesList : Fragment() {
         ): View? {
 
         val view  = inflater.inflate(R.layout.fragment_movies_list, container, false)
-        val posterView =  view.findViewById<ImageView>(R.id.movie_poster)
-        posterView.setOnClickListener{
-                        activity?.let{
-                            it.supportFragmentManager.commit {
-                                addToBackStack(null)
-                                add<FragmentMoviesDetails>(R.id.main_container)
-                            }
-                        }
+
+        recyclerView = view.findViewById(R.id.movies_recycler_view)
+
+        recyclerView?.layoutManager = GridLayoutManager(view.context,2)
+
+        recyclerView?.adapter = MoviesListAdapter().apply {
+            bindMovies(MoviesList().getMovies())
         }
+//        val posterView =  view.findViewById<ImageView>(R.id.movie_poster)
+//        posterView.setOnClickListener{
+//                        activity?.let{
+//                            it.supportFragmentManager.commit {
+//                                addToBackStack(null)
+//                                add<FragmentMoviesDetails>(R.id.main_container)
+//                            }
+//                        }
+//        }
 
         return view
     }
