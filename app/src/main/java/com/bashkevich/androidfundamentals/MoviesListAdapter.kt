@@ -8,9 +8,8 @@ import android.widget.TextView
 import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.recyclerview.widget.RecyclerView
 import com.bashkevich.androidfundamentals.model.Movie
-import com.bumptech.glide.Glide
 
-class MoviesListAdapter : RecyclerView.Adapter<MoviesListViewHolder>() {
+class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) : RecyclerView.Adapter<MoviesListViewHolder>() {
 
     private var movies = listOf<Movie>()
 
@@ -23,8 +22,10 @@ class MoviesListAdapter : RecyclerView.Adapter<MoviesListViewHolder>() {
 
         val movie = movies[position]
 
-        Glide.with(holder.itemView.context).load(movie.posterImageId)
-            .into(holder.posterView)
+//            Glide.with(holder.itemView.context).load(movie.posterImageId).
+//            .into(holder.posterView)
+
+        movie.posterImageId?.let { holder.posterView.setImageResource(it) }
 
         holder.ageCategory.text = "${movie.minAge} +"
 
@@ -37,6 +38,10 @@ class MoviesListAdapter : RecyclerView.Adapter<MoviesListViewHolder>() {
         holder.reviews.text = "${movie.reviews} reviews"
 
         holder.duration.text = "${movie.duration} min"
+
+        holder.itemView.setOnClickListener {
+            onMovieClickListener.onMovieClick(movie)
+        }
     }
 
     fun bindMovies( newMovies : List<Movie>) {
@@ -59,4 +64,8 @@ class MoviesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      val duration = itemView.findViewById<TextView>(R.id.duration)
 
 
+}
+
+interface OnMovieClickListener{
+    fun onMovieClick(movie: Movie)
 }

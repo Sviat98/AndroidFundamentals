@@ -18,6 +18,7 @@
     <dimen name="fourteen_dp_margin">14dp</dimen>
     <dimen name="small_genres_text_size">8sp</dimen>
     <dimen name="five_dp_margin">5dp</dimen>
+    <dimen name="thirty_two_dp_margin">32dp</dimen>
 
 
 </resources>
