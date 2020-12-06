@@ -4,7 +4,7 @@ import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
-class ActorsDecoration: RecyclerView.ItemDecoration() {
+class ActorsDecoration : RecyclerView.ItemDecoration() {
 
 
     override fun getItemOffsets(
@@ -14,6 +14,6 @@ class ActorsDecoration: RecyclerView.ItemDecoration() {
         state: RecyclerView.State
     ) {
         super.getItemOffsets(outRect, view, parent, state)
-        outRect.right = 8
+        outRect.right = view.context.resources.getDimension(R.dimen.medium_margin).toInt()
     }
 }

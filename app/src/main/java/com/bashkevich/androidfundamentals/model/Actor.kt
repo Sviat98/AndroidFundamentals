@@ -1,6 +1,9 @@
 package com.bashkevich.androidfundamentals.model
 
+import androidx.annotation.DrawableRes
+
 data class Actor(
-    val imageResource: Int?,
-    val name : String?
+    @DrawableRes
+    val  imageResource: Int,
+    val name : String
 )

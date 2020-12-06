@@ -19,16 +19,16 @@ import com.bashkevich.androidfundamentals.model.Movie
 class FragmentMoviesList : Fragment() {
     private var recyclerView: RecyclerView? = null
 
-    private val onMovieClickListener =object : OnMovieClickListener {
+    private val onMovieClickListener = object : OnMovieClickListener {
         override fun onMovieClick(movie: Movie) {
             if (movie.title?.equals(getString(R.string.title))!!)
-            activity?.let {
-                it.supportFragmentManager.commit {
-                    addToBackStack(null)
-                    add<FragmentMoviesDetails>(R.id.main_container)
-                }
-            }else{
-                Toast.makeText(context,"Not implemented!",Toast.LENGTH_LONG).show()
+                activity?.let {
+                    it.supportFragmentManager.commit {
+                        addToBackStack(null)
+                        add<FragmentMoviesDetails>(R.id.main_container)
+                    }
+                } else {
+                Toast.makeText(context, getString(R.string.not_implemented), Toast.LENGTH_LONG).show()
             }
 
         }
@@ -39,16 +39,16 @@ class FragmentMoviesList : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-        ): View? {
+    ): View? {
 
-        val view  = inflater.inflate(R.layout.fragment_movies_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_movies_list, container, false)
 
-       recyclerView = view.findViewById(R.id.movies_recycler_view)
+        recyclerView = view.findViewById(R.id.movies_recycler_view)
 
-        recyclerView?.layoutManager = GridLayoutManager(view.context,2)
+        recyclerView?.layoutManager = GridLayoutManager(view.context, 2)
 
         recyclerView?.adapter = MoviesListAdapter(onMovieClickListener).apply {
-           bindMovies(DataList().getMovies())
+            bindMovies(DataList().getMovies())
         }
 
         recyclerView?.addItemDecoration(MoviesDecoration())
@@ -58,9 +58,8 @@ class FragmentMoviesList : Fragment() {
 
     override fun onDetach() {
         super.onDetach()
-        recyclerView =null
+        recyclerView = null
     }
-
 
 
 }

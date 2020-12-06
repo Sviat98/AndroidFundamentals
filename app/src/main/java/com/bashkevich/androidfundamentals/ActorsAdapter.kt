@@ -13,7 +13,8 @@ class ActorsAdapter : RecyclerView.Adapter<ActorsViewHolder>() {
     private var actors = listOf<Actor>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorsViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.view_holder_actor,parent,false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.view_holder_actor, parent, false)
 
         return ActorsViewHolder(view)
     }
@@ -22,18 +23,18 @@ class ActorsAdapter : RecyclerView.Adapter<ActorsViewHolder>() {
 
         val actor = actors[position]
 
-        actor.imageResource?.let { holder.actorImageView.setImageResource(it) }
+        actor.imageResource.let { holder.actorImageView.setImageResource(it) }
 
         holder.actorName.text = actor.name
 
     }
 
-    fun bindActors(newActors : List<Actor>){
+    fun bindActors(newActors: List<Actor>) {
         actors = newActors
         notifyDataSetChanged()
     }
 
-    override fun getItemCount(): Int =actors.size
+    override fun getItemCount(): Int = actors.size
 }
 
 class ActorsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
