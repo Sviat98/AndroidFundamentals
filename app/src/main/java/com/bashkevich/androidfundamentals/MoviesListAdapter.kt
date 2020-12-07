@@ -26,7 +26,7 @@ class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) 
 
         movie.posterImageId.let { holder.posterView.setImageResource(it) }
 
-        holder.ageCategory.text = holder.context.getString(R.string.age_category,movie.minAge)
+        holder.ageCategory.text = holder.context.getString(R.string.age_category, movie.minAge)
 
         holder.title.text = movie.title
 
@@ -34,9 +34,9 @@ class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) 
 
         holder.rating.rating = movie.rating.toFloat()
 
-        holder.reviews.text = holder.context.getString(R.string.reviews,movie.reviews)
+        holder.reviews.text = holder.context.getString(R.string.reviews, movie.reviews)
 
-        holder.duration.text = holder.context.getString(R.string.duration,movie.duration)
+        holder.duration.text = holder.context.getString(R.string.duration, movie.duration)
 
         holder.itemView.setOnClickListener {
             onMovieClickListener.onMovieClick(movie)
