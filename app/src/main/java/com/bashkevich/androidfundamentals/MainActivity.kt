@@ -10,12 +10,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-       if (savedInstanceState==null){
-           supportFragmentManager.commit {
-               setReorderingAllowed(true)
-               add<FragmentMoviesList>(R.id.main_container)
-           }
-       }
+        if (savedInstanceState == null) {
+            supportFragmentManager.commit {
+                setReorderingAllowed(true)
+                add<FragmentMoviesList>(R.id.main_container)
+            }
+        }
     }
 
 }

@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">AndroidFundamentals</string>
     <string name="back_button">Back</string>
-    <string name="age_category">13+</string>
+    <string name="age_category">%1$d+</string>
     <string name="title">Avengers: End Game</string>
     <string name="genres">Action, Adventure, Fantasy</string>
-    <string name="reviews">125 reviews</string>
+    <string name="reviews">%1$d reviews</string>
     <string name="storyline">Storyline</string>
     <string name="description">After the devastating events of Avengers: Infinity War,
         the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order
@@ -15,6 +15,9 @@
     <string name="mark_ruffalo">Mark Ruffalo</string>
     <string name="chris_hemsfort">Chris Hemsfort</string>
     <string name="movies_list_title">Movies List</string>
-    <string name="duration">137 min</string>
+    <string name="duration">%1$d min</string>
+    <string name="not_implemented">Not implemented!</string>
+    <string name="avengers_reviews">125 reviews</string>
+    <string name="avengers_age_category">13 +</string>
 
 </resources>
