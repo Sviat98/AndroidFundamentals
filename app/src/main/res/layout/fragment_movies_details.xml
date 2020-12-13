@@ -13,8 +13,10 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/backdrop_details"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/backdrop_image_height"
+            android:foreground="@drawable/ic_foreground_backdrop"
             android:scaleType="centerCrop"
             android:src="@drawable/origmain_background"
             app:layout_constraintEnd_toEndOf="parent"
@@ -49,53 +51,48 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin_start"
+            android:layout_marginTop="226dp"
             android:text="@string/avengers_age_category"
             android:textColor="@color/white"
             android:textSize="@dimen/default_text_size"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/title"
+            app:layout_constraintBottom_toTopOf="@id/title_details"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/backButton"
-            app:layout_constraintTop_toTopOf="@id/guideline_age_category" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/title_details"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/default_margin_start"
+            android:layout_marginHorizontal="@dimen/default_margin_start"
             android:layout_marginTop="@dimen/title_margin_top"
             android:text="@string/title"
             android:textColor="@color/white"
             android:textSize="@dimen/title_text_size"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/genres"
-            app:layout_constraintEnd_toEndOf="@id/guideline_title"
+            app:layout_constraintBottom_toTopOf="@id/genres_details"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/age_category" />
 
         <TextView
-            android:id="@+id/genres"
+            android:id="@+id/genres_details"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin_start"
             android:layout_marginTop="@dimen/extra_small_margin"
             android:text="@string/genres"
             android:textColor="@color/rating_and_genre_color"
-            app:layout_constraintBottom_toTopOf="@id/movie_rating"
+            app:layout_constraintBottom_toTopOf="@id/movie_rating_details"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title" />
+            app:layout_constraintTop_toBottomOf="@id/title_details" />
 
         <androidx.appcompat.widget.AppCompatRatingBar
-            android:id="@+id/movie_rating"
+            android:id="@+id/movie_rating_details"
             style="@style/Base.Widget.AppCompat.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -108,22 +105,23 @@
             android:rating="4"
             android:stepSize="0.5"
             app:layout_constraintBottom_toTopOf="@id/storyline"
-            app:layout_constraintEnd_toStartOf="@id/reviews"
+            app:layout_constraintEnd_toStartOf="@id/reviews_details"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/genres" />
+            app:layout_constraintTop_toBottomOf="@id/genres_details" />
 
 
         <TextView
-            android:id="@+id/reviews"
+            android:id="@+id/reviews_details"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/default_margin_start"
             android:text="@string/avengers_reviews"
             android:textColor="@color/back_button_color"
-            app:layout_constraintBottom_toBottomOf="@id/movie_rating"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/movie_rating_details"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/movie_rating"
-            app:layout_constraintTop_toTopOf="@id/movie_rating" />
+            app:layout_constraintStart_toEndOf="@id/movie_rating_details"
+            app:layout_constraintTop_toTopOf="@id/movie_rating_details" />
 
 
         <TextView
@@ -135,13 +133,13 @@
             android:text="@string/storyline"
             android:textColor="@color/white"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/description"
+            app:layout_constraintBottom_toTopOf="@id/description_details"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/movie_rating" />
+            app:layout_constraintTop_toBottomOf="@id/movie_rating_details" />
 
         <TextView
-            android:id="@+id/description"
+            android:id="@+id/description_details"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin_start"
@@ -166,7 +164,7 @@
             app:layout_constraintBottom_toTopOf="@id/actors_recycler_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/description" />
+            app:layout_constraintTop_toBottomOf="@id/description_details" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/actors_recycler_view"
