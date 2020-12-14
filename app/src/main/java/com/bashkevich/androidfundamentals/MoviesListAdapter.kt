@@ -35,7 +35,7 @@ class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) 
 
         holder.genres.text = movie.genres.joinToString { genre -> genre.name }
 
-        holder.rating.rating = movie.ratings/2
+        holder.rating.rating = movie.ratings / 2
 
         holder.reviews.text = holder.context.getString(R.string.reviews, movie.numberOfRatings)
 

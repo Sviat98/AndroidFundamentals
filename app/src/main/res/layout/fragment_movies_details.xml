@@ -44,14 +44,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.29" />
+            app:layout_constraintGuide_begin="@dimen/margin_to_age_category" />
 
         <TextView
             android:id="@+id/age_category"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin_start"
-            android:layout_marginTop="226dp"
             android:text="@string/avengers_age_category"
             android:textColor="@color/white"
             android:textSize="@dimen/default_text_size"
@@ -60,7 +59,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/backButton"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/guideline_age_category" />
 
 
         <TextView
@@ -103,7 +102,7 @@
             android:progressBackgroundTint="@color/back_button_color"
             android:progressTint="@color/rating_and_genre_color"
             android:rating="4"
-            android:stepSize="0.5"
+            android:stepSize="0.01"
             app:layout_constraintBottom_toTopOf="@id/storyline"
             app:layout_constraintEnd_toStartOf="@id/reviews_details"
             app:layout_constraintStart_toStartOf="parent"

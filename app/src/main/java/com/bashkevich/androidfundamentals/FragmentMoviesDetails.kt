@@ -22,7 +22,7 @@ class FragmentMoviesDetails : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            movie = arguments?.getParcelable(PARAM_MOVIE)
+            movie = it.getParcelable(PARAM_MOVIE)
         }
     }
 
@@ -42,25 +42,31 @@ class FragmentMoviesDetails : Fragment() {
         val reviewView = view.findViewById<TextView>(R.id.reviews_details)
         val descriptionView = view.findViewById<TextView>(R.id.description_details)
         val castView = view.findViewById<TextView>(R.id.cast)
-
-        Picasso.get().load(Uri.parse(movie?.backdrop)).into(backdropView)
-
-        ageCategoryView.text = context?.getString(R.string.age_category, movie?.minimumAge)
-        titleView.text = movie?.title
-        genresView.text = movie?.genres?.joinToString { it.name }
-        ratingView.rating = movie?.ratings?.div(2)!!
-        reviewView.text = context?.getString(R.string.reviews, movie?.numberOfRatings)
-        descriptionView.text = movie?.overview
-
         actorsRecyclerView = view.findViewById(R.id.actors_recycler_view)
 
-        if (movie?.actors?.isEmpty()!!) {
-            castView.visibility = View.GONE
+
+        movie?.let { movie ->
+            Picasso.get().load(Uri.parse(movie.backdrop)).into(backdropView)
+
+            ageCategoryView.text = context?.getString(R.string.age_category, movie?.minimumAge)
+            titleView.text = movie.title
+            genresView.text = movie.genres.joinToString { it.name }
+            ratingView.rating = movie.ratings.div(2)!!
+            reviewView.text = context?.getString(R.string.reviews, movie?.numberOfRatings)
+            descriptionView.text = movie.overview
+
+            val actors = movie.actors
+
+            if (actors.isEmpty()) {
+                castView.visibility = View.GONE
+            }
+
+            actorsRecyclerView?.adapter = ActorsAdapter().apply {
+                bindActors(movie.actors)
+            }
         }
 
-        actorsRecyclerView?.adapter = ActorsAdapter().apply {
-            movie?.actors?.let { bindActors(it) }
-        }
+
         actorsRecyclerView?.addItemDecoration(ActorsDecoration())
         actorsRecyclerView?.layoutManager =
             LinearLayoutManager(view.context, LinearLayoutManager.HORIZONTAL, false)
@@ -78,12 +84,10 @@ class FragmentMoviesDetails : Fragment() {
         private const val PARAM_MOVIE = "movie"
 
         fun newInstance(
-            id: Int,
             movie: Movie,
         ): FragmentMoviesDetails {
             val fragment = FragmentMoviesDetails()
             val args = Bundle()
-            args.putInt(PARAM_ID, id)
             args.putParcelable(PARAM_MOVIE, movie)
             fragment.arguments = args
             return fragment

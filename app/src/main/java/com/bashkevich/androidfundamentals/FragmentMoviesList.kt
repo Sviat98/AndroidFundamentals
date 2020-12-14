@@ -11,6 +11,7 @@ import com.bashkevich.androidfundamentals.data.loadMovies
 import com.bashkevich.androidfundamentals.data.Movie
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class FragmentMoviesList : Fragment() {
@@ -21,7 +22,7 @@ class FragmentMoviesList : Fragment() {
         override fun onMovieClick(movie: Movie) {
             activity?.let {
                 it.supportFragmentManager.beginTransaction().addToBackStack(null)
-                    .add(R.id.main_container, FragmentMoviesDetails.newInstance(1, movie)).commit()
+                    .add(R.id.main_container, FragmentMoviesDetails.newInstance(movie)).commit()
             }
         }
     }
@@ -58,4 +59,8 @@ class FragmentMoviesList : Fragment() {
         recyclerView = null
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
+    }
 }
