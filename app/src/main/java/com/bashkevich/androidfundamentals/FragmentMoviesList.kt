@@ -1,39 +1,31 @@
 package com.bashkevich.androidfundamentals
 
-import android.media.browse.MediaBrowser
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.Toast
-import androidx.fragment.app.add
-import androidx.fragment.app.commit
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.bashkevich.androidfundamentals.data.DataList
-import com.bashkevich.androidfundamentals.model.Movie
+import com.bashkevich.androidfundamentals.data.loadMovies
+import com.bashkevich.androidfundamentals.data.Movie
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class FragmentMoviesList : Fragment() {
     private var recyclerView: RecyclerView? = null
+    private val scope = CoroutineScope(Dispatchers.Main)
 
     private val onMovieClickListener = object : OnMovieClickListener {
         override fun onMovieClick(movie: Movie) {
-            if (movie.title?.equals(getString(R.string.title))!!)
-                activity?.let {
-                    it.supportFragmentManager.commit {
-                        addToBackStack(null)
-                        add<FragmentMoviesDetails>(R.id.main_container)
-                    }
-                } else {
-                Toast.makeText(context, getString(R.string.not_implemented), Toast.LENGTH_LONG).show()
+            activity?.let {
+                it.supportFragmentManager.beginTransaction().addToBackStack(null)
+                    .add(R.id.main_container, FragmentMoviesDetails.newInstance(movie)).commit()
             }
-
         }
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +40,12 @@ class FragmentMoviesList : Fragment() {
         recyclerView?.layoutManager = GridLayoutManager(view.context, 2)
 
         recyclerView?.adapter = MoviesListAdapter(onMovieClickListener).apply {
-            bindMovies(DataList().getMovies())
+            scope.launch {
+                val movies = context?.let { loadMovies(it) }
+                if (movies != null) {
+                    bindMovies(movies)
+                }
+            }
         }
 
         recyclerView?.addItemDecoration(MoviesDecoration())
@@ -56,10 +53,14 @@ class FragmentMoviesList : Fragment() {
         return view
     }
 
+
     override fun onDetach() {
         super.onDetach()
         recyclerView = null
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        scope.cancel()
+    }
 }

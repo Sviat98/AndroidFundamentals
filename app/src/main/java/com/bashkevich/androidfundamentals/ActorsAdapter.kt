@@ -1,12 +1,14 @@
 package com.bashkevich.androidfundamentals
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bashkevich.androidfundamentals.model.Actor
+import com.bashkevich.androidfundamentals.data.Actor
+import com.squareup.picasso.Picasso
 
 class ActorsAdapter : RecyclerView.Adapter<ActorsViewHolder>() {
 
@@ -23,7 +25,7 @@ class ActorsAdapter : RecyclerView.Adapter<ActorsViewHolder>() {
 
         val actor = actors[position]
 
-        actor.imageResource.let { holder.actorImageView.setImageResource(it) }
+        Picasso.get().load(Uri.parse(actor.picture)).into(holder.actorImageView)
 
         holder.actorName.text = actor.name
 
