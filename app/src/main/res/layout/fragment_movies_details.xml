@@ -90,9 +90,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_details" />
 
-        <androidx.appcompat.widget.AppCompatRatingBar
+        <RatingBar
             android:id="@+id/movie_rating_details"
-            style="@style/Base.Widget.AppCompat.RatingBar.Small"
+            style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin_start"
@@ -101,7 +101,7 @@
             android:numStars="5"
             android:progressBackgroundTint="@color/back_button_color"
             android:progressTint="@color/rating_and_genre_color"
-            android:rating="4"
+            tools:rating="4"
             android:stepSize="0.01"
             app:layout_constraintBottom_toTopOf="@id/storyline"
             app:layout_constraintEnd_toStartOf="@id/reviews_details"

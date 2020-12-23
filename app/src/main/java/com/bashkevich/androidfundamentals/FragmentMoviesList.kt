@@ -1,22 +1,21 @@
 package com.bashkevich.androidfundamentals
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bashkevich.androidfundamentals.data.loadMovies
 import com.bashkevich.androidfundamentals.data.Movie
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
+
 
 class FragmentMoviesList : Fragment() {
     private var recyclerView: RecyclerView? = null
-    private val scope = CoroutineScope(Dispatchers.Main)
+
+    private val moviesListViewModel: MoviesListViewModel by viewModels { MoviesListViewModelFactory() }
 
     private val onMovieClickListener = object : OnMovieClickListener {
         override fun onMovieClick(movie: Movie) {
@@ -26,6 +25,9 @@ class FragmentMoviesList : Fragment() {
             }
         }
     }
+
+    private val moviesListAdapter = MoviesListAdapter(onMovieClickListener)
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,20 +39,30 @@ class FragmentMoviesList : Fragment() {
 
         recyclerView = view.findViewById(R.id.movies_recycler_view)
 
-        recyclerView?.layoutManager = GridLayoutManager(view.context, 2)
+        moviesListViewModel.loadMoviesList()
 
-        recyclerView?.adapter = MoviesListAdapter(onMovieClickListener).apply {
-            scope.launch {
-                val movies = context?.let { loadMovies(it) }
-                if (movies != null) {
-                    bindMovies(movies)
-                }
-            }
+
+        moviesListViewModel.moviesListLiveData.observe(this.viewLifecycleOwner){movies->
+            setUpMoviesList(movies)
         }
 
-        recyclerView?.addItemDecoration(MoviesDecoration())
+        setUpMoviesListRecyclerView()
+
 
         return view
+    }
+
+    private fun setUpMoviesListRecyclerView(){
+        recyclerView?.layoutManager = GridLayoutManager(context, 2)
+        recyclerView?.adapter = moviesListAdapter
+        recyclerView?.addItemDecoration(MoviesDecoration())
+    }
+
+    private fun setUpMoviesList(movies : List<Movie>){
+        moviesListAdapter.bindMovies(movies)
+        for (movie in movies){
+            Log.d("moviesList rating of ${movie.title}",movie.ratings.div(2).toString())
+        }
     }
 
 
@@ -61,6 +73,5 @@ class FragmentMoviesList : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        scope.cancel()
     }
 }
