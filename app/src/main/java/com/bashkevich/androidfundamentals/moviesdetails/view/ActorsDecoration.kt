@@ -1,8 +1,9 @@
-package com.bashkevich.androidfundamentals
+package com.bashkevich.androidfundamentals.moviesdetails.view
 
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.bashkevich.androidfundamentals.R
 
 class ActorsDecoration : RecyclerView.ItemDecoration() {
 

@@ -1,4 +1,4 @@
-package com.bashkevich.androidfundamentals
+package com.bashkevich.androidfundamentals.movieslist.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

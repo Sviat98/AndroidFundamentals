@@ -5,6 +5,7 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/back_button_color</item>
 
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
@@ -12,8 +13,8 @@
     </style>
 
     <style name="RatingBarSmallest" parent="@android:style/Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/rating_bar_smallest</item>
-        <item name="android:indeterminateDrawable">@drawable/rating_bar_smallest</item>
+<!--        <item name="android:progressDrawable">@drawable/rating_bar_smallest</item>-->
+<!--        <item name="android:indeterminateDrawable">@drawable/rating_bar_smallest</item>-->
         <item name="android:minHeight">8dp</item>
         <item name="android:maxHeight">8dp</item>
     </style>

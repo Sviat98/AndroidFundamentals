@@ -1,4 +1,4 @@
-package com.bashkevich.androidfundamentals
+package com.bashkevich.androidfundamentals.moviesdetails.view
 
 import android.net.Uri
 import android.os.Bundle
@@ -10,22 +10,28 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bashkevich.androidfundamentals.R
 import com.bashkevich.androidfundamentals.data.Movie
+import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsViewModel
+import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsViewModelFactory
 import com.squareup.picasso.Picasso
 
 
 class FragmentMoviesDetails : Fragment() {
     private var actorsRecyclerView: RecyclerView? = null
-    private var movie: Movie? = null
+    private var movieId: Int? = null
 
     private val actorsAdapter = ActorsAdapter()
+
+    private val moviesDetailsViewModel : MoviesDetailsViewModel by viewModels { MoviesDetailsViewModelFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            movie = it.getParcelable(PARAM_MOVIE)
+            movieId = it.getInt(PARAM_ID)
         }
     }
 
@@ -47,31 +53,32 @@ class FragmentMoviesDetails : Fragment() {
         val castView = view.findViewById<TextView>(R.id.cast)
         actorsRecyclerView = view.findViewById(R.id.actors_recycler_view)
 
+        movieId?.let { moviesDetailsViewModel.getMovieFromList(it) }
 
-        movie?.let { movie ->
-            Picasso.get().load(Uri.parse(movie.backdrop)).into(backdropView)
 
-            ageCategoryView.text = context?.getString(R.string.age_category, movie?.minimumAge)
-            titleView.text = movie.title
-            genresView.text = movie.genres.joinToString { it.name }
-            //ratingView.rating = movie.ratings.div(2)
-            ratingView.rating = movie.ratings/2
-            reviewView.text = context?.getString(R.string.reviews, movie?.numberOfRatings)
-            descriptionView.text = movie.overview
+        moviesDetailsViewModel.movieLiveData.observe(this.viewLifecycleOwner) {movie->
 
-            setUpActorsRecyclerView()
+            movie?.let { movie ->
+                Picasso.get().load(Uri.parse(movie.backdrop)).into(backdropView)
 
-            val actors = movie.actors
+                ageCategoryView.text = context?.getString(R.string.age_category, movie.minimumAge)
+                titleView.text = movie.title
+                genresView.text = movie.genres.joinToString { it.name }
+                ratingView.rating = movie.ratings / 2
+                reviewView.text = context?.getString(R.string.reviews, movie.numberOfRatings)
+                descriptionView.text = movie.overview
 
-            if (actors.isEmpty()) {
-                castView.visibility = View.GONE
+                setUpActorsRecyclerView()
+
+                val actors = movie.actors
+
+                if (actors.isEmpty()) {
+                    castView.visibility = View.GONE
+                }
+
+                actorsAdapter.bindActors(actors)
+
             }
-
-            actorsAdapter.bindActors(actors)
-
-
-            Log.d("moviesDs rating of ${movie.title}","${movie.ratings.div(2)}")
-
         }
         return view
 
@@ -92,14 +99,13 @@ class FragmentMoviesDetails : Fragment() {
 
     companion object {
         private const val PARAM_ID = "movie_id"
-        private const val PARAM_MOVIE = "movie"
 
         fun newInstance(
-            movie: Movie,
+            movieId: Int,
         ): FragmentMoviesDetails {
             val fragment = FragmentMoviesDetails()
             val args = Bundle()
-            args.putParcelable(PARAM_MOVIE, movie)
+            args.putInt(PARAM_ID, movieId)
             fragment.arguments = args
             return fragment
         }

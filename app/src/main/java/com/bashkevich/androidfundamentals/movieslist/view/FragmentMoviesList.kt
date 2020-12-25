@@ -1,4 +1,4 @@
-package com.bashkevich.androidfundamentals
+package com.bashkevich.androidfundamentals.movieslist.view
 
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +9,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bashkevich.androidfundamentals.*
 import com.bashkevich.androidfundamentals.data.Movie
+import com.bashkevich.androidfundamentals.moviesdetails.view.FragmentMoviesDetails
+import com.bashkevich.androidfundamentals.movieslist.viewmodel.MoviesListViewModel
+import com.bashkevich.androidfundamentals.movieslist.viewmodel.MoviesListViewModelFactory
 
 
 class FragmentMoviesList : Fragment() {
@@ -18,10 +22,10 @@ class FragmentMoviesList : Fragment() {
     private val moviesListViewModel: MoviesListViewModel by viewModels { MoviesListViewModelFactory() }
 
     private val onMovieClickListener = object : OnMovieClickListener {
-        override fun onMovieClick(movie: Movie) {
+        override fun onMovieClick(movieId: Int) {
             activity?.let {
                 it.supportFragmentManager.beginTransaction().addToBackStack(null)
-                    .add(R.id.main_container, FragmentMoviesDetails.newInstance(movie)).commit()
+                    .add(R.id.main_container, FragmentMoviesDetails.newInstance(movieId)).commit()
             }
         }
     }
@@ -40,14 +44,10 @@ class FragmentMoviesList : Fragment() {
         recyclerView = view.findViewById(R.id.movies_recycler_view)
 
         moviesListViewModel.loadMoviesList()
-
-
         moviesListViewModel.moviesListLiveData.observe(this.viewLifecycleOwner){movies->
             setUpMoviesList(movies)
         }
-
         setUpMoviesListRecyclerView()
-
 
         return view
     }
@@ -60,18 +60,11 @@ class FragmentMoviesList : Fragment() {
 
     private fun setUpMoviesList(movies : List<Movie>){
         moviesListAdapter.bindMovies(movies)
-        for (movie in movies){
-            Log.d("moviesList rating of ${movie.title}",movie.ratings.div(2).toString())
-        }
     }
 
 
     override fun onDetach() {
         super.onDetach()
         recyclerView = null
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }

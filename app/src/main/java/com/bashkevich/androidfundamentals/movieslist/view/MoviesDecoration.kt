@@ -1,8 +1,9 @@
-package com.bashkevich.androidfundamentals
+package com.bashkevich.androidfundamentals.movieslist.view
 
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import com.bashkevich.androidfundamentals.R
 
 
 class MoviesDecoration : RecyclerView.ItemDecoration() {

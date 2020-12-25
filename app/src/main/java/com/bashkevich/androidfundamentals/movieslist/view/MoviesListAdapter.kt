@@ -1,6 +1,7 @@
-package com.bashkevich.androidfundamentals
+package com.bashkevich.androidfundamentals.movieslist.view
 
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.recyclerview.widget.RecyclerView
+import com.bashkevich.androidfundamentals.R
 import com.bashkevich.androidfundamentals.data.Movie
 import com.squareup.picasso.Picasso
 
@@ -42,7 +44,8 @@ class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) 
         holder.duration.text = holder.context.getString(R.string.duration, movie.runtime)
 
         holder.itemView.setOnClickListener {
-            onMovieClickListener.onMovieClick(movie)
+            Log.d("movieId","${movie.id}")
+            onMovieClickListener.onMovieClick(movie.id)
         }
     }
 
@@ -58,18 +61,17 @@ class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) 
 class MoviesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     val posterView = itemView.findViewById<ImageView>(R.id.movie_poster)
-    val ageCategory = itemView.findViewById<TextView>(R.id.age_category)
-    val title = itemView.findViewById<TextView>(R.id.title_details)
-    val genres = itemView.findViewById<TextView>(R.id.genres_details)
-    val rating = itemView.findViewById<AppCompatRatingBar>(R.id.movie_rating_details)
-    val reviews = itemView.findViewById<TextView>(R.id.reviews_details)
-    val duration = itemView.findViewById<TextView>(R.id.duration)
-
+    val ageCategory = itemView.findViewById<TextView>(R.id.movie_age_category)
+    val title = itemView.findViewById<TextView>(R.id.movie_title)
+    val genres = itemView.findViewById<TextView>(R.id.movie_genres)
+    val rating = itemView.findViewById<AppCompatRatingBar>(R.id.movie_rating)
+    val reviews = itemView.findViewById<TextView>(R.id.movie_reviews)
+    val duration = itemView.findViewById<TextView>(R.id.movie_duration)
 
 }
 
 interface OnMovieClickListener {
-    fun onMovieClick(movie: Movie)
+    fun onMovieClick(movieId : Int)
 }
 
 private val RecyclerView.ViewHolder.context
