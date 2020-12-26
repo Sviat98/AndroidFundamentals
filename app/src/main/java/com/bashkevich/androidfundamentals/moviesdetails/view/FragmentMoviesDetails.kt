@@ -72,7 +72,7 @@ class FragmentMoviesDetails : Fragment() {
 
                 if (actors.isEmpty()) {
                     castView.visibility = View.GONE
-                }else{
+                } else {
                     setUpActorsRecyclerView()
                     actorsAdapter.bindActors(actors)
                 }
