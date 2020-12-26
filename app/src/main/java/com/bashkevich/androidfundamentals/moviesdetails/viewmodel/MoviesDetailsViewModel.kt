@@ -11,12 +11,12 @@ import kotlinx.coroutines.launch
 class MoviesDetailsViewModel(
         private val jsonLoad: JsonLoad
 ) : ViewModel() {
-    private var _movieLiveData  = MutableLiveData<Movie>()
+    private var _movieLiveData = MutableLiveData<Movie>()
 
-    val movieLiveData : LiveData<Movie>
-    get() = _movieLiveData
+    val movieLiveData: LiveData<Movie>
+        get() = _movieLiveData
 
-    fun getMovieFromList(movieId : Int){
+    fun getMovieFromList(movieId: Int) {
         viewModelScope.launch {
             val movies = jsonLoad.loadMovies()
             val movie = movies.find { movie -> movie.id == movieId }

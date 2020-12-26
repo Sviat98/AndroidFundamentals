@@ -25,7 +25,7 @@ class FragmentMoviesList : Fragment() {
         override fun onMovieClick(movieId: Int) {
             activity?.let {
                 it.supportFragmentManager.beginTransaction().addToBackStack(null)
-                    .add(R.id.main_container, FragmentMoviesDetails.newInstance(movieId)).commit()
+                        .add(R.id.main_container, FragmentMoviesDetails.newInstance(movieId)).commit()
             }
         }
     }
@@ -34,31 +34,32 @@ class FragmentMoviesList : Fragment() {
 
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
 
         val view = inflater.inflate(R.layout.fragment_movies_list, container, false)
 
         recyclerView = view.findViewById(R.id.movies_recycler_view)
 
+        setUpMoviesListRecyclerView()
         moviesListViewModel.loadMoviesList()
-        moviesListViewModel.moviesListLiveData.observe(this.viewLifecycleOwner){movies->
+
+        moviesListViewModel.moviesListLiveData.observe(this.viewLifecycleOwner) { movies ->
             setUpMoviesList(movies)
         }
-        setUpMoviesListRecyclerView()
 
         return view
     }
 
-    private fun setUpMoviesListRecyclerView(){
+    private fun setUpMoviesListRecyclerView() {
         recyclerView?.layoutManager = GridLayoutManager(context, 2)
         recyclerView?.adapter = moviesListAdapter
         recyclerView?.addItemDecoration(MoviesDecoration())
     }
 
-    private fun setUpMoviesList(movies : List<Movie>){
+    private fun setUpMoviesList(movies: List<Movie>) {
         moviesListAdapter.bindMovies(movies)
     }
 

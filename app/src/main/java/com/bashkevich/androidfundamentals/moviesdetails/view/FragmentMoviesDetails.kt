@@ -26,7 +26,7 @@ class FragmentMoviesDetails : Fragment() {
 
     private val actorsAdapter = ActorsAdapter()
 
-    private val moviesDetailsViewModel : MoviesDetailsViewModel by viewModels { MoviesDetailsViewModelFactory() }
+    private val moviesDetailsViewModel: MoviesDetailsViewModel by viewModels { MoviesDetailsViewModelFactory() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +36,9 @@ class FragmentMoviesDetails : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_movies_details, container, false)
@@ -56,9 +56,8 @@ class FragmentMoviesDetails : Fragment() {
         movieId?.let { moviesDetailsViewModel.getMovieFromList(it) }
 
 
-        moviesDetailsViewModel.movieLiveData.observe(this.viewLifecycleOwner) {movie->
-
-            movie?.let { movie ->
+        moviesDetailsViewModel.movieLiveData.observe(this.viewLifecycleOwner) { selectedMovie ->
+            selectedMovie?.let { movie ->
                 Picasso.get().load(Uri.parse(movie.backdrop)).into(backdropView)
 
                 ageCategoryView.text = context?.getString(R.string.age_category, movie.minimumAge)
@@ -68,15 +67,16 @@ class FragmentMoviesDetails : Fragment() {
                 reviewView.text = context?.getString(R.string.reviews, movie.numberOfRatings)
                 descriptionView.text = movie.overview
 
-                setUpActorsRecyclerView()
 
                 val actors = movie.actors
 
                 if (actors.isEmpty()) {
                     castView.visibility = View.GONE
+                }else{
+                    setUpActorsRecyclerView()
+                    actorsAdapter.bindActors(actors)
                 }
 
-                actorsAdapter.bindActors(actors)
 
             }
         }
@@ -89,7 +89,7 @@ class FragmentMoviesDetails : Fragment() {
 
         actorsRecyclerView?.addItemDecoration(ActorsDecoration())
         actorsRecyclerView?.layoutManager =
-            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
     override fun onDetach() {
@@ -101,7 +101,7 @@ class FragmentMoviesDetails : Fragment() {
         private const val PARAM_ID = "movie_id"
 
         fun newInstance(
-            movieId: Int,
+                movieId: Int,
         ): FragmentMoviesDetails {
             val fragment = FragmentMoviesDetails()
             val args = Bundle()
