@@ -17,14 +17,14 @@ class MoviesDetailsViewModel(
         get() = _movieLiveData
 
     fun getMovieFromList(movieId: Int) {
-        viewModelScope.launch {
-            val movies = jsonLoad.loadMovies()
-            val movie = movies.find { movie -> movie.id == movieId }
+        if (_movieLiveData.value?.id != movieId) {
+            viewModelScope.launch {
+                val movies = jsonLoad.loadMovies()
+                val movie = movies.find { movie -> movie.id == movieId }
 
-            _movieLiveData.value = movie
+                _movieLiveData.value = movie
+            }
         }
-
-
     }
 
 }

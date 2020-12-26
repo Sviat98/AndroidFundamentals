@@ -44,7 +44,6 @@ class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) 
         holder.duration.text = holder.context.getString(R.string.duration, movie.runtime)
 
         holder.itemView.setOnClickListener {
-            Log.d("movieId","${movie.id}")
             onMovieClickListener.onMovieClick(movie.id)
         }
     }

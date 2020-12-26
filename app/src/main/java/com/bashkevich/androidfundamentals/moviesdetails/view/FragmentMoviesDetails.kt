@@ -2,7 +2,6 @@ package com.bashkevich.androidfundamentals.moviesdetails.view
 
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bashkevich.androidfundamentals.R
-import com.bashkevich.androidfundamentals.data.Movie
+import com.bashkevich.androidfundamentals.data.Actor
 import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsViewModel
 import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsViewModelFactory
 import com.squareup.picasso.Picasso
@@ -53,8 +52,9 @@ class FragmentMoviesDetails : Fragment() {
         val castView = view.findViewById<TextView>(R.id.cast)
         actorsRecyclerView = view.findViewById(R.id.actors_recycler_view)
 
-        movieId?.let { moviesDetailsViewModel.getMovieFromList(it) }
+        setUpActorsRecyclerView()
 
+        movieId?.let { moviesDetailsViewModel.getMovieFromList(it) }
 
         moviesDetailsViewModel.movieLiveData.observe(this.viewLifecycleOwner) { selectedMovie ->
             selectedMovie?.let { movie ->
@@ -73,15 +73,16 @@ class FragmentMoviesDetails : Fragment() {
                 if (actors.isEmpty()) {
                     castView.visibility = View.GONE
                 } else {
-                    setUpActorsRecyclerView()
-                    actorsAdapter.bindActors(actors)
+                    setUpActors(actors)
                 }
-
-
             }
         }
         return view
 
+    }
+
+    private fun setUpActors(actors: List<Actor>) {
+        actorsAdapter.bindActors(actors)
     }
 
     private fun setUpActorsRecyclerView() {

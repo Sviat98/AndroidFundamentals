@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bashkevich.androidfundamentals.data.JsonLoad
 import com.bashkevich.androidfundamentals.data.Movie
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 class MoviesListViewModel(
