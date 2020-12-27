@@ -23,13 +23,13 @@
             android:foreground="@drawable/foreground_movie_item"
             android:scaleType="centerCrop"
             android:src="@drawable/avengers"
-            app:layout_constraintBottom_toTopOf="@id/title_details"
+            app:layout_constraintBottom_toTopOf="@id/movie_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/age_category"
+            android:id="@+id/movie_age_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/actor_margin_top"
@@ -61,49 +61,51 @@
             android:layout_marginEnd="@dimen/actor_margin_top"
             android:button="@drawable/ic_baseline_favorite_16"
             android:buttonTint="@color/like_color"
-            app:layout_constraintBottom_toBottomOf="@id/age_category"
+            app:layout_constraintBottom_toBottomOf="@id/movie_age_category"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/age_category" />
+            app:layout_constraintTop_toTopOf="@id/movie_age_category" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/genres_barrier"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="top"
-            app:constraint_referenced_ids="genres_details" />
+            app:constraint_referenced_ids="movie_genres" />
 
         <TextView
-            android:id="@+id/genres_details"
+            android:id="@+id/movie_genres"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/actor_label_margin_top"
             android:text="@string/genres"
             android:textColor="@color/rating_and_genre_color"
             android:textSize="@dimen/small_genres_text_size"
-            app:layout_constraintBottom_toTopOf="@id/movie_rating_details"
+            app:layout_constraintBottom_toTopOf="@id/movie_rating"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/movie_poster" />
 
-        <androidx.appcompat.widget.AppCompatRatingBar
-            android:id="@+id/movie_rating_details"
+        <RatingBar
+            android:id="@+id/movie_rating"
             style="@style/RatingBarSmallest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/ten_dp_margin"
+            android:indeterminateDrawable="@drawable/rating_bar_smallest"
             android:isIndicator="true"
             android:numStars="5"
             android:progressBackgroundTint="@color/back_button_color"
+            android:progressDrawable="@drawable/rating_bar_smallest"
             android:progressTint="@color/rating_and_genre_color"
             android:rating="4"
-            android:stepSize="0.01"
+            android:stepSize="1"
             app:layout_constraintBottom_toBottomOf="@id/movie_poster"
-            app:layout_constraintEnd_toStartOf="@id/reviews_details"
-            app:layout_constraintStart_toStartOf="@id/genres_details"
-            app:layout_constraintTop_toTopOf="@id/reviews_details" />
+            app:layout_constraintEnd_toStartOf="@id/movie_reviews"
+            app:layout_constraintStart_toStartOf="@id/movie_genres"
+            app:layout_constraintTop_toTopOf="@id/movie_reviews" />
 
 
         <TextView
-            android:id="@+id/reviews_details"
+            android:id="@+id/movie_reviews"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/actor_margin_top"
@@ -112,14 +114,14 @@
             android:textColor="@color/back_button_color"
             android:textSize="@dimen/small_genres_text_size"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/movie_rating_details"
+            app:layout_constraintBottom_toBottomOf="@id/movie_rating"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/movie_rating_details"
-            app:layout_constraintTop_toBottomOf="@id/genres_details" />
+            app:layout_constraintStart_toEndOf="@id/movie_rating"
+            app:layout_constraintTop_toBottomOf="@id/movie_genres" />
 
 
         <TextView
-            android:id="@+id/title_details"
+            android:id="@+id/movie_title"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginHorizontal="@dimen/medium_margin"
@@ -131,13 +133,13 @@
             android:textColor="@color/white"
             android:textSize="@dimen/movies_list_text_size"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/duration"
+            app:layout_constraintBottom_toTopOf="@+id/movie_duration"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/movie_poster" />
 
         <TextView
-            android:id="@+id/duration"
+            android:id="@+id/movie_duration"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/medium_margin"
@@ -149,8 +151,8 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/title_details"
-            app:layout_constraintTop_toBottomOf="@id/title_details" />
+            app:layout_constraintStart_toStartOf="@id/movie_title"
+            app:layout_constraintTop_toBottomOf="@id/movie_title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/main_background_color"
     android:orientation="vertical"
-    tools:context=".FragmentMoviesDetails">
+    tools:context=".moviesdetails.view.FragmentMoviesDetails">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,14 +18,14 @@
             android:layout_height="@dimen/backdrop_image_height"
             android:foreground="@drawable/ic_foreground_backdrop"
             android:scaleType="centerCrop"
-            android:src="@drawable/origmain_background"
+            tools:src="@drawable/main_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView
-            android:id="@+id/backButton"
+            android:id="@+id/back_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/back_button_margin_start"
@@ -51,14 +51,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin_start"
-            android:text="@string/avengers_age_category"
+            tools:text="@string/avengers_age_category"
             android:textColor="@color/white"
             android:textSize="@dimen/default_text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/title_details"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/backButton"
+            app:layout_constraintTop_toBottomOf="@id/back_button"
             app:layout_constraintTop_toTopOf="@id/guideline_age_category" />
 
 
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/default_margin_start"
             android:layout_marginTop="@dimen/title_margin_top"
-            android:text="@string/title"
+            tools:text="@string/title"
             android:textColor="@color/white"
             android:textSize="@dimen/title_text_size"
             android:textStyle="bold"
@@ -83,30 +83,32 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin_start"
             android:layout_marginTop="@dimen/extra_small_margin"
-            android:text="@string/genres"
+            tools:text="@string/genres"
             android:textColor="@color/rating_and_genre_color"
             app:layout_constraintBottom_toTopOf="@id/movie_rating_details"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_details" />
 
-        <androidx.appcompat.widget.AppCompatRatingBar
+        <RatingBar
             android:id="@+id/movie_rating_details"
-            style="@style/Base.Widget.AppCompat.RatingBar.Small"
+            style="?attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin_start"
             android:layout_marginTop="@dimen/extra_small_margin"
+            android:backgroundTint="@color/back_button_color"
             android:isIndicator="true"
             android:numStars="5"
             android:progressBackgroundTint="@color/back_button_color"
             android:progressTint="@color/rating_and_genre_color"
-            android:rating="4"
-            android:stepSize="0.01"
+            android:stepSize="0.5"
+            android:theme="@style/Widget.AppCompat.RatingBar.Small"
             app:layout_constraintBottom_toTopOf="@id/storyline"
             app:layout_constraintEnd_toStartOf="@id/reviews_details"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/genres_details" />
+            app:layout_constraintTop_toBottomOf="@id/genres_details"
+            tools:rating="4.05" />
 
 
         <TextView
@@ -114,7 +116,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/default_margin_start"
-            android:text="@string/avengers_reviews"
+            tools:text="@string/avengers_reviews"
             android:textColor="@color/back_button_color"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/movie_rating_details"
@@ -144,7 +146,7 @@
             android:layout_marginStart="@dimen/default_margin_start"
             android:layout_marginTop="@dimen/extra_small_margin"
             android:layout_marginEnd="@dimen/default_margin_start"
-            android:text="@string/description"
+            tools:text="@string/description"
             android:textColor="@color/white"
             app:layout_constraintBottom_toTopOf="@id/cast"
             app:layout_constraintEnd_toEndOf="parent"

@@ -1,4 +1,4 @@
-package com.bashkevich.androidfundamentals
+package com.bashkevich.androidfundamentals.moviesdetails.view
 
 import android.net.Uri
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bashkevich.androidfundamentals.R
 import com.bashkevich.androidfundamentals.data.Actor
 import com.squareup.picasso.Picasso
 
