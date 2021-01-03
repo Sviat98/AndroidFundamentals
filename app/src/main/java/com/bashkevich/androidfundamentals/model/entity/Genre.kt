@@ -1,4 +1,4 @@
-package com.bashkevich.androidfundamentals.data
+package com.bashkevich.androidfundamentals.model.entity
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

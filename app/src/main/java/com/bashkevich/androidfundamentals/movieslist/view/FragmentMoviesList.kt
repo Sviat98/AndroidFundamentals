@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bashkevich.androidfundamentals.*
-import com.bashkevich.androidfundamentals.data.Movie
+import com.bashkevich.androidfundamentals.model.entity.Movie
 import com.bashkevich.androidfundamentals.moviesdetails.view.FragmentMoviesDetails
 import com.bashkevich.androidfundamentals.movieslist.viewmodel.MoviesListViewModel
 import com.bashkevich.androidfundamentals.movieslist.viewmodel.MoviesListViewModelFactory
@@ -21,10 +21,10 @@ class FragmentMoviesList : Fragment() {
     private val moviesListViewModel: MoviesListViewModel by viewModels { MoviesListViewModelFactory() }
 
     private val onMovieClickListener = object : OnMovieClickListener {
-        override fun onMovieClick(movieId: Int) {
+        override fun onMovieClick(movie: Movie) {
             activity?.let {
                 it.supportFragmentManager.beginTransaction().addToBackStack(null)
-                        .add(R.id.main_container, FragmentMoviesDetails.newInstance(movieId)).commit()
+                    .add(R.id.main_container, FragmentMoviesDetails.newInstance(movie)).commit()
             }
         }
     }
@@ -33,9 +33,9 @@ class FragmentMoviesList : Fragment() {
 
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
 
         val view = inflater.inflate(R.layout.fragment_movies_list, container, false)

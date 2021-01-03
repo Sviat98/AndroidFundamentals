@@ -1,6 +1,5 @@
 package com.bashkevich.androidfundamentals.moviesdetails.view
 
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,16 +11,20 @@ import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.bashkevich.androidfundamentals.R
-import com.bashkevich.androidfundamentals.data.Actor
+import com.bashkevich.androidfundamentals.model.RetrofitModule
+import com.bashkevich.androidfundamentals.model.entity.Actor
+import com.bashkevich.androidfundamentals.model.entity.Movie
 import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsViewModel
 import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsViewModelFactory
-import com.squareup.picasso.Picasso
 
 
 class FragmentMoviesDetails : Fragment() {
     private var actorsRecyclerView: RecyclerView? = null
     private var movieId: Int? = null
+    private var movie: Movie? = null
+
 
     private val actorsAdapter = ActorsAdapter()
 
@@ -31,13 +34,14 @@ class FragmentMoviesDetails : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             movieId = it.getInt(PARAM_ID)
+            movie = it.getParcelable(PARAM_MOVIE)
         }
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_movies_details, container, false)
@@ -54,15 +58,18 @@ class FragmentMoviesDetails : Fragment() {
 
         setUpActorsRecyclerView()
 
-        movieId?.let { moviesDetailsViewModel.getMovieFromList(it) }
+        movie?.let { moviesDetailsViewModel.loadMovie(it) }
 
         moviesDetailsViewModel.movieLiveData.observe(this.viewLifecycleOwner) { selectedMovie ->
             selectedMovie?.let { movie ->
-                Picasso.get().load(Uri.parse(movie.backdrop)).into(backdropView)
+
+                backdropView.load("${RetrofitModule.IMAGES_BASE_URL}${movie.backdrop}") {
+                    crossfade(true)
+                }
 
                 ageCategoryView.text = context?.getString(R.string.age_category, movie.minimumAge)
                 titleView.text = movie.title
-                genresView.text = movie.genres.joinToString { it.name }
+                genresView.text = movie.genres?.joinToString { it.name }
                 ratingView.rating = movie.ratings / 2
                 reviewView.text = context?.getString(R.string.reviews, movie.numberOfRatings)
                 descriptionView.text = movie.overview
@@ -90,7 +97,7 @@ class FragmentMoviesDetails : Fragment() {
 
         actorsRecyclerView?.addItemDecoration(ActorsDecoration())
         actorsRecyclerView?.layoutManager =
-                LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
     override fun onDetach() {
@@ -100,13 +107,17 @@ class FragmentMoviesDetails : Fragment() {
 
     companion object {
         private const val PARAM_ID = "movie_id"
+        private const val PARAM_MOVIE = "movie"
+
 
         fun newInstance(
-                movieId: Int,
+            //movieId: Int,
+            movie: Movie
         ): FragmentMoviesDetails {
             val fragment = FragmentMoviesDetails()
             val args = Bundle()
-            args.putInt(PARAM_ID, movieId)
+            //args.putInt(PARAM_ID, movieId)
+            args.putParcelable(PARAM_MOVIE, movie)
             fragment.arguments = args
             return fragment
         }
