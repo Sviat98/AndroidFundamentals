@@ -1,5 +1,6 @@
 package com.bashkevich.androidfundamentals.movieslist.view
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -21,10 +22,10 @@ class FragmentMoviesList : Fragment() {
     private val moviesListViewModel: MoviesListViewModel by viewModels { MoviesListViewModelFactory() }
 
     private val onMovieClickListener = object : OnMovieClickListener {
-        override fun onMovieClick(movie: Movie) {
+        override fun onMovieClick(movieId: Int) {
             activity?.let {
                 it.supportFragmentManager.beginTransaction().addToBackStack(null)
-                    .add(R.id.main_container, FragmentMoviesDetails.newInstance(movie)).commit()
+                    .add(R.id.main_container, FragmentMoviesDetails.newInstance(movieId)).commit()
             }
         }
     }
@@ -53,7 +54,13 @@ class FragmentMoviesList : Fragment() {
     }
 
     private fun setUpMoviesListRecyclerView() {
-        recyclerView?.layoutManager = GridLayoutManager(context, 2)
+        val spanCount =
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                3
+            } else {
+                2
+            }
+        recyclerView?.layoutManager = GridLayoutManager(context, spanCount)
         recyclerView?.adapter = moviesListAdapter
         recyclerView?.addItemDecoration(MoviesDecoration())
     }

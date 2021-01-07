@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bashkevich.androidfundamentals.model.EntityMapper
 import com.bashkevich.androidfundamentals.model.MoviesRepository
-import com.bashkevich.androidfundamentals.model.RetrofitModule
 import com.bashkevich.androidfundamentals.model.entity.Actor
 import com.bashkevich.androidfundamentals.model.entity.Movie
 import kotlinx.coroutines.Dispatchers
@@ -21,20 +19,20 @@ class MoviesDetailsViewModel(
     val movieLiveData: LiveData<Movie>
         get() = _movieLiveData
 
-    fun loadMovie(movie: Movie) {
-        if (_movieLiveData.value?.id != movie.id) {
+    fun loadMovie(movieId: Int) {
+        if (_movieLiveData.value?.id != movieId) {
             viewModelScope.launch {
 
-                movie.actors = addActorsToMovie(movie.id)
+                val movieWithActors = MoviesRepository.allMovies?.find { it.id == movieId }
+                    ?.copy(actors = addActorsToMovie(movieId))
 
-                _movieLiveData.value = movie
+                _movieLiveData.value = movieWithActors
             }
         }
     }
 
     private suspend fun addActorsToMovie(movieId: Int): List<Actor> = withContext(Dispatchers.IO) {
-        moviesRepository.getActors(movieId).cast.filter { it.profilePicture != null }
-            .map { EntityMapper.convertActorFromDto(it) } as List<Actor>
+        moviesRepository.getActors(movieId)
     }
 
 }

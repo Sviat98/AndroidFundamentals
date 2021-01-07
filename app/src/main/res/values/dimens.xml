@@ -19,8 +19,6 @@
     <dimen name="small_genres_text_size">8sp</dimen>
     <dimen name="five_dp_margin">5dp</dimen>
     <dimen name="thirty_two_dp_margin">32dp</dimen>
-    <dimen name="card_movie_width">152dp</dimen>
-    <dimen name="card_movie_height">310dp</dimen>
     <dimen name="movie_image_height">248dp</dimen>
     <dimen name="backdrop_image_height">298dp</dimen>
     <dimen name="margin_to_age_category">226dp</dimen>

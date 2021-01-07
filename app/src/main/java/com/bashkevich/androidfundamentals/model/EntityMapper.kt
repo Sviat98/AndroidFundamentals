@@ -11,22 +11,21 @@ object EntityMapper {
     fun convertToMovieFromDto(movieDto: MovieDto): Movie {
 
         return Movie(
-            movieDto.id,
-            movieDto.title,
-            movieDto.overview,
-            movieDto.posterPicture?.let { it },
-            movieDto.backdropPicture?.let { it },
-            movieDto.ratings,
-            movieDto.votesCount,
-            if (movieDto.adult) 16 else 13,
-            movieDto.runtime?.let { it },
-            movieDto.genres?.map { convertGenreFromDto(it) },
-            listOf<Actor>()
+            id = movieDto.id,
+            title = movieDto.title,
+            overview = movieDto.overview,
+            poster = movieDto.posterPicture,
+            backdrop = movieDto.backdropPicture,
+            ratings = movieDto.ratings,
+            numberOfRatings = movieDto.votesCount,
+            minimumAge = if (movieDto.adult) 16 else 13,
+            runtime = movieDto.runtime,
+            genres = movieDto.genres?.map { convertGenreFromDto(it) }
         )
     }
 
     private fun convertGenreFromDto(genreDto: GenreDto) = Genre(genreDto.id, genreDto.name)
 
     fun convertActorFromDto(actorDto: ActorDto) =
-        actorDto.profilePicture?.let { Actor(actorDto.id, actorDto.name, it) }
+         Actor(actorDto.id, actorDto.name, actorDto.profilePicture)
 }

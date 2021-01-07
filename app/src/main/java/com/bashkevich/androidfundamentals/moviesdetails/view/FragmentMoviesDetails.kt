@@ -15,7 +15,6 @@ import coil.load
 import com.bashkevich.androidfundamentals.R
 import com.bashkevich.androidfundamentals.model.RetrofitModule
 import com.bashkevich.androidfundamentals.model.entity.Actor
-import com.bashkevich.androidfundamentals.model.entity.Movie
 import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsViewModel
 import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsViewModelFactory
 
@@ -23,8 +22,6 @@ import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsV
 class FragmentMoviesDetails : Fragment() {
     private var actorsRecyclerView: RecyclerView? = null
     private var movieId: Int? = null
-    private var movie: Movie? = null
-
 
     private val actorsAdapter = ActorsAdapter()
 
@@ -33,8 +30,7 @@ class FragmentMoviesDetails : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            movieId = it.getInt(PARAM_ID)
-            movie = it.getParcelable(PARAM_MOVIE)
+            movieId = it.getInt(PARAM_MOVIE_ID)
         }
     }
 
@@ -58,7 +54,7 @@ class FragmentMoviesDetails : Fragment() {
 
         setUpActorsRecyclerView()
 
-        movie?.let { moviesDetailsViewModel.loadMovie(it) }
+        movieId?.let { moviesDetailsViewModel.loadMovie(it) }
 
         moviesDetailsViewModel.movieLiveData.observe(this.viewLifecycleOwner) { selectedMovie ->
             selectedMovie?.let { movie ->
@@ -77,11 +73,12 @@ class FragmentMoviesDetails : Fragment() {
 
                 val actors = movie.actors
 
-                if (actors.isEmpty()) {
+                if (actors == null) {
                     castView.visibility = View.GONE
                 } else {
                     setUpActors(actors)
                 }
+
             }
         }
         return view
@@ -106,18 +103,15 @@ class FragmentMoviesDetails : Fragment() {
     }
 
     companion object {
-        private const val PARAM_ID = "movie_id"
-        private const val PARAM_MOVIE = "movie"
+        private const val PARAM_MOVIE_ID = "movieId"
 
 
         fun newInstance(
-            //movieId: Int,
-            movie: Movie
+            movieId: Int
         ): FragmentMoviesDetails {
             val fragment = FragmentMoviesDetails()
             val args = Bundle()
-            //args.putInt(PARAM_ID, movieId)
-            args.putParcelable(PARAM_MOVIE, movie)
+            args.putInt(PARAM_MOVIE_ID, movieId)
             fragment.arguments = args
             return fragment
         }

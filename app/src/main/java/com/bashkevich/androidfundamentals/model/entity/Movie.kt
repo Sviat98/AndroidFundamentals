@@ -1,9 +1,5 @@
 package com.bashkevich.androidfundamentals.model.entity
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-
-@Parcelize
 data class Movie(
     val id: Int,
     val title: String,
@@ -15,5 +11,5 @@ data class Movie(
     val minimumAge: Int,
     val runtime: Int?,
     val genres: List<Genre>?,
-    var actors: List<Actor>
-) : Parcelable
+    val actors: List<Actor>? = null
+)

@@ -44,7 +44,7 @@ class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) 
         holder.duration.text = holder.context.getString(R.string.duration, movie.runtime)
 
         holder.itemView.setOnClickListener {
-            onMovieClickListener.onMovieClick(movie)
+            onMovieClickListener.onMovieClick(movie.id)
         }
     }
 
@@ -70,7 +70,7 @@ class MoviesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 }
 
 interface OnMovieClickListener {
-    fun onMovieClick(movie: Movie)
+    fun onMovieClick(movieId: Int)
 }
 
 private val RecyclerView.ViewHolder.context
