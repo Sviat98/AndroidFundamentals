@@ -54,12 +54,10 @@ class FragmentMoviesDetails : Fragment() {
 
         setUpActorsRecyclerView()
 
-        movieId?.let { moviesDetailsViewModel.loadMovie(it) }
-
         moviesDetailsViewModel.movieLiveData.observe(this.viewLifecycleOwner) { selectedMovie ->
             selectedMovie?.let { movie ->
 
-                backdropView.load("${RetrofitModule.IMAGES_BASE_URL}${movie.backdrop}") {
+                backdropView.load(movie.backdrop) {
                     crossfade(true)
                 }
 
@@ -81,6 +79,8 @@ class FragmentMoviesDetails : Fragment() {
 
             }
         }
+        movieId?.let { moviesDetailsViewModel.loadMovie(it) }
+
         return view
 
     }

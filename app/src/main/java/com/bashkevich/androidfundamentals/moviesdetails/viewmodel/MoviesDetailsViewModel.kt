@@ -23,7 +23,7 @@ class MoviesDetailsViewModel(
         if (_movieLiveData.value?.id != movieId) {
             viewModelScope.launch {
 
-                val movieWithActors = MoviesRepository.allMovies?.find { it.id == movieId }
+                val movieWithActors = moviesRepository.findMovieById(movieId)
                     ?.copy(actors = addActorsToMovie(movieId))
 
                 _movieLiveData.value = movieWithActors

@@ -24,7 +24,7 @@ class MoviesListViewModel(private val moviesRepository: MoviesRepository) : View
 
                 val movies = loadMoviesFromNetwork()
 
-                MoviesRepository.allMovies = movies
+                moviesRepository.cacheAllMovies(movies)
 
                 _moviesListLiveData.value = movies
             }

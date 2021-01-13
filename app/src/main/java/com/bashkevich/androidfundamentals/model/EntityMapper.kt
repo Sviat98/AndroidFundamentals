@@ -14,8 +14,8 @@ object EntityMapper {
             id = movieDto.id,
             title = movieDto.title,
             overview = movieDto.overview,
-            poster = movieDto.posterPicture,
-            backdrop = movieDto.backdropPicture,
+            poster = makeImageUrl(movieDto.posterPicture),
+            backdrop = makeImageUrl(movieDto.backdropPicture),
             ratings = movieDto.ratings,
             numberOfRatings = movieDto.votesCount,
             minimumAge = if (movieDto.adult) 16 else 13,
@@ -24,8 +24,17 @@ object EntityMapper {
         )
     }
 
-    private fun convertGenreFromDto(genreDto: GenreDto) = Genre(genreDto.id, genreDto.name)
+    private fun convertGenreFromDto(genreDto: GenreDto) = Genre(
+        id = genreDto.id,
+        name = genreDto.name
+    )
 
     fun convertActorFromDto(actorDto: ActorDto) =
-         Actor(actorDto.id, actorDto.name, actorDto.profilePicture)
+        Actor(
+            id = actorDto.id,
+            name = actorDto.name,
+            picture = makeImageUrl(actorDto.profilePicture)
+        )
 }
+
+private fun makeImageUrl(picturePath: String?) = "${RetrofitModule.IMAGES_BASE_URL}$picturePath"

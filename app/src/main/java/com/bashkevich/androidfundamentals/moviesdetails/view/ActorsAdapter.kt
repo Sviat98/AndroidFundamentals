@@ -27,7 +27,7 @@ class ActorsAdapter : RecyclerView.Adapter<ActorsViewHolder>() {
 
         val actor = actors[position]
 
-        holder.actorImageView.load("${RetrofitModule.IMAGES_BASE_URL}${actor.picture}") {
+        holder.actorImageView.load(actor.picture) {
             crossfade(true)
             transformations(RoundedCornersTransformation(15f))
         }

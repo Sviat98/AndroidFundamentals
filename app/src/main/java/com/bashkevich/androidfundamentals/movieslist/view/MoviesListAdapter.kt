@@ -27,7 +27,7 @@ class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) 
 
         val movie = movies[position]
 
-        holder.posterView.load("${RetrofitModule.IMAGES_BASE_URL}${movie.poster}") {
+        holder.posterView.load(movie.poster) {
             crossfade(true)
         }
 
