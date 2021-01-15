@@ -1,7 +1,5 @@
 package com.bashkevich.androidfundamentals.movieslist.view
 
-import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +7,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.bashkevich.androidfundamentals.R
-import com.bashkevich.androidfundamentals.data.Movie
-import com.squareup.picasso.Picasso
+import com.bashkevich.androidfundamentals.model.RetrofitModule
+import com.bashkevich.androidfundamentals.model.entity.Movie
 
 class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) :
     RecyclerView.Adapter<MoviesListViewHolder>() {
@@ -28,14 +27,15 @@ class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) 
 
         val movie = movies[position]
 
-        Picasso.get().load(Uri.parse(movie.poster)).into(holder.posterView)
-
+        holder.posterView.load(movie.poster) {
+            crossfade(true)
+        }
 
         holder.ageCategory.text = holder.context.getString(R.string.age_category, movie.minimumAge)
 
         holder.title.text = movie.title
 
-        holder.genres.text = movie.genres.joinToString { genre -> genre.name }
+        holder.genres.text = movie.genres?.joinToString { genre -> genre.name }
 
         holder.rating.rating = movie.ratings / 2
 
@@ -70,7 +70,7 @@ class MoviesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 }
 
 interface OnMovieClickListener {
-    fun onMovieClick(movieId : Int)
+    fun onMovieClick(movieId: Int)
 }
 
 private val RecyclerView.ViewHolder.context

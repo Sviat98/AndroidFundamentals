@@ -1,5 +1,6 @@
 package com.bashkevich.androidfundamentals.movieslist.view
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bashkevich.androidfundamentals.*
-import com.bashkevich.androidfundamentals.data.Movie
+import com.bashkevich.androidfundamentals.model.entity.Movie
 import com.bashkevich.androidfundamentals.moviesdetails.view.FragmentMoviesDetails
 import com.bashkevich.androidfundamentals.movieslist.viewmodel.MoviesListViewModel
 import com.bashkevich.androidfundamentals.movieslist.viewmodel.MoviesListViewModelFactory
@@ -24,7 +25,7 @@ class FragmentMoviesList : Fragment() {
         override fun onMovieClick(movieId: Int) {
             activity?.let {
                 it.supportFragmentManager.beginTransaction().addToBackStack(null)
-                        .add(R.id.main_container, FragmentMoviesDetails.newInstance(movieId)).commit()
+                    .add(R.id.main_container, FragmentMoviesDetails.newInstance(movieId)).commit()
             }
         }
     }
@@ -33,9 +34,9 @@ class FragmentMoviesList : Fragment() {
 
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
 
         val view = inflater.inflate(R.layout.fragment_movies_list, container, false)
@@ -53,7 +54,13 @@ class FragmentMoviesList : Fragment() {
     }
 
     private fun setUpMoviesListRecyclerView() {
-        recyclerView?.layoutManager = GridLayoutManager(context, 2)
+        val spanCount =
+            if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                3
+            } else {
+                2
+            }
+        recyclerView?.layoutManager = GridLayoutManager(context, spanCount)
         recyclerView?.adapter = moviesListAdapter
         recyclerView?.addItemDecoration(MoviesDecoration())
     }

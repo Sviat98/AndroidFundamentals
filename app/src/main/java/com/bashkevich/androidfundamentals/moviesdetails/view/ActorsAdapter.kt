@@ -1,15 +1,16 @@
 package com.bashkevich.androidfundamentals.moviesdetails.view
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.transform.RoundedCornersTransformation
 import com.bashkevich.androidfundamentals.R
-import com.bashkevich.androidfundamentals.data.Actor
-import com.squareup.picasso.Picasso
+import com.bashkevich.androidfundamentals.model.RetrofitModule
+import com.bashkevich.androidfundamentals.model.entity.Actor
 
 class ActorsAdapter : RecyclerView.Adapter<ActorsViewHolder>() {
 
@@ -26,7 +27,10 @@ class ActorsAdapter : RecyclerView.Adapter<ActorsViewHolder>() {
 
         val actor = actors[position]
 
-        Picasso.get().load(Uri.parse(actor.picture)).into(holder.actorImageView)
+        holder.actorImageView.load(actor.picture) {
+            crossfade(true)
+            transformations(RoundedCornersTransformation(15f))
+        }
 
         holder.actorName.text = actor.name
 
