@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bashkevich.androidfundamentals.model.MoviesRepository
-import com.bashkevich.androidfundamentals.model.entity.Actor
-import com.bashkevich.androidfundamentals.model.entity.Movie
+import com.bashkevich.androidfundamentals.model.viewobject.Actor
+import com.bashkevich.androidfundamentals.model.viewobject.Movie
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,17 +22,11 @@ class MoviesDetailsViewModel(
     fun loadMovie(movieId: Int) {
         if (_movieLiveData.value?.id != movieId) {
             viewModelScope.launch {
-
                 val movieWithActors = moviesRepository.findMovieById(movieId)
-                    ?.copy(actors = addActorsToMovie(movieId))
 
                 _movieLiveData.value = movieWithActors
             }
         }
-    }
-
-    private suspend fun addActorsToMovie(movieId: Int): List<Actor> = withContext(Dispatchers.IO) {
-        moviesRepository.getActors(movieId)
     }
 
 }

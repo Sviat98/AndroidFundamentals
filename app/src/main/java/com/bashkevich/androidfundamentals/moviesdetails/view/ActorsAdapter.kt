@@ -9,8 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import coil.transform.RoundedCornersTransformation
 import com.bashkevich.androidfundamentals.R
-import com.bashkevich.androidfundamentals.model.RetrofitModule
-import com.bashkevich.androidfundamentals.model.entity.Actor
+import com.bashkevich.androidfundamentals.model.viewobject.Actor
 
 class ActorsAdapter : RecyclerView.Adapter<ActorsViewHolder>() {
 

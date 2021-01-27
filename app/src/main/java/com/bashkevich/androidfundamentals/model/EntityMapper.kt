@@ -1,40 +1,59 @@
 package com.bashkevich.androidfundamentals.model
 
 import com.bashkevich.androidfundamentals.model.dto.ActorDto
-import com.bashkevich.androidfundamentals.model.dto.GenreDto
 import com.bashkevich.androidfundamentals.model.dto.MovieDto
-import com.bashkevich.androidfundamentals.model.entity.Actor
-import com.bashkevich.androidfundamentals.model.entity.Genre
-import com.bashkevich.androidfundamentals.model.entity.Movie
+import com.bashkevich.androidfundamentals.model.entity.ActorEntity
+import com.bashkevich.androidfundamentals.model.entity.MovieEntity
+import com.bashkevich.androidfundamentals.model.entity.MovieWithActors
+import com.bashkevich.androidfundamentals.model.viewobject.Actor
+import com.bashkevich.androidfundamentals.model.viewobject.Movie
 
 object EntityMapper {
-    fun convertToMovieFromDto(movieDto: MovieDto): Movie {
 
-        return Movie(
-            id = movieDto.id,
+    fun toMovieEntity(movieDto: MovieDto) =
+        MovieEntity(
+            movieId = movieDto.id,
             title = movieDto.title,
-            overview = movieDto.overview,
-            poster = makeImageUrl(movieDto.posterPicture),
-            backdrop = makeImageUrl(movieDto.backdropPicture),
-            ratings = movieDto.ratings,
-            numberOfRatings = movieDto.votesCount,
-            minimumAge = if (movieDto.adult) 16 else 13,
+            posterPath = makeImageUrl(movieDto.posterPicture),
+            backdropPath = makeImageUrl(movieDto.backdropPicture),
             runtime = movieDto.runtime,
-            genres = movieDto.genres?.map { convertGenreFromDto(it) }
+            genres = movieDto.genres?.joinToString { it.name }?.filter { !it.isWhitespace() },
+            rating = movieDto.ratings,
+            voteCount = movieDto.votesCount,
+            overview = movieDto.overview,
+            minimumAge = if (movieDto.adult) 16 else 13
         )
-    }
 
-    private fun convertGenreFromDto(genreDto: GenreDto) = Genre(
-        id = genreDto.id,
-        name = genreDto.name
+    fun toActorEntity(actorDto: ActorDto) = ActorEntity(
+        actorId = actorDto.id,
+        profilePath = makeImageUrl(actorDto.profilePicture),
+        actorName = actorDto.name
     )
 
-    fun convertActorFromDto(actorDto: ActorDto) =
-        Actor(
-            id = actorDto.id,
-            name = actorDto.name,
-            picture = makeImageUrl(actorDto.profilePicture)
-        )
-}
+    fun fromMovieEntity(movieEntity: MovieEntity) = Movie(
+        id = movieEntity.movieId,
+        title = movieEntity.title,
+        overview = movieEntity.overview,
+        poster = movieEntity.posterPath,
+        backdrop = movieEntity.backdropPath,
+        ratings = movieEntity.rating,
+        numberOfRatings = movieEntity.voteCount,
+        minimumAge = movieEntity.minimumAge,
+        runtime = movieEntity.runtime,
+        genres = movieEntity.genres?.split(delimiters = charArrayOf(','))
+    )
 
-private fun makeImageUrl(picturePath: String?) = "${RetrofitModule.IMAGES_BASE_URL}$picturePath"
+    fun fromMovieWithActors(movieWithActors: MovieWithActors) =
+        fromMovieEntity(movieWithActors.movie).copy(actors = movieWithActors.actors.map {
+            fromActorEntity(it)
+        })
+
+    private fun fromActorEntity(actorEntity: ActorEntity) = Actor(
+        id = actorEntity.actorId,
+        picture = actorEntity.profilePath,
+        name = actorEntity.actorName
+    )
+
+
+    private fun makeImageUrl(picturePath: String?) = "${RetrofitModule.IMAGES_BASE_URL}$picturePath"
+}

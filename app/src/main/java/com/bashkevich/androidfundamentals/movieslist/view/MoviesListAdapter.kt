@@ -9,8 +9,7 @@ import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bashkevich.androidfundamentals.R
-import com.bashkevich.androidfundamentals.model.RetrofitModule
-import com.bashkevich.androidfundamentals.model.entity.Movie
+import com.bashkevich.androidfundamentals.model.viewobject.Movie
 
 class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) :
     RecyclerView.Adapter<MoviesListViewHolder>() {
@@ -35,7 +34,7 @@ class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) 
 
         holder.title.text = movie.title
 
-        holder.genres.text = movie.genres?.joinToString { genre -> genre.name }
+        holder.genres.text = movie.genres?.joinToString()
 
         holder.rating.rating = movie.ratings / 2
 

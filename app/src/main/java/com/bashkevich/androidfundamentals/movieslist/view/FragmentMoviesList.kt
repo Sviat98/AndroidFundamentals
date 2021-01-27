@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bashkevich.androidfundamentals.*
-import com.bashkevich.androidfundamentals.model.entity.Movie
+import com.bashkevich.androidfundamentals.model.viewobject.Movie
 import com.bashkevich.androidfundamentals.moviesdetails.view.FragmentMoviesDetails
 import com.bashkevich.androidfundamentals.movieslist.viewmodel.MoviesListViewModel
 import com.bashkevich.androidfundamentals.movieslist.viewmodel.MoviesListViewModelFactory
@@ -19,19 +19,20 @@ import com.bashkevich.androidfundamentals.movieslist.viewmodel.MoviesListViewMod
 class FragmentMoviesList : Fragment() {
     private var recyclerView: RecyclerView? = null
 
-    private val moviesListViewModel: MoviesListViewModel by viewModels { MoviesListViewModelFactory() }
+    private val moviesListViewModel: MoviesListViewModel by viewModels {
+        MoviesListViewModelFactory(
+            requireContext().applicationContext
+        )
+    }
 
     private val onMovieClickListener = object : OnMovieClickListener {
         override fun onMovieClick(movieId: Int) {
-            activity?.let {
-                it.supportFragmentManager.beginTransaction().addToBackStack(null)
-                    .add(R.id.main_container, FragmentMoviesDetails.newInstance(movieId)).commit()
-            }
+            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
+                ?.add(R.id.main_container, FragmentMoviesDetails.newInstance(movieId))?.commit()
         }
     }
 
     private val moviesListAdapter = MoviesListAdapter(onMovieClickListener)
-
 
     override fun onCreateView(
         inflater: LayoutInflater,

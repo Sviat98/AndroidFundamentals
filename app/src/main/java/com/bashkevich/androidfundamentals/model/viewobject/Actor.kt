@@ -1,4 +1,4 @@
-package com.bashkevich.androidfundamentals.model.entity
+package com.bashkevich.androidfundamentals.model.viewobject
 
 
 data class Actor(
