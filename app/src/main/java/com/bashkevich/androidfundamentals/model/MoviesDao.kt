@@ -10,7 +10,6 @@ import com.bashkevich.androidfundamentals.model.entity.MovieWithActors
 @Dao
 interface MoviesDao {
 
-    @Transaction
     @Query("SELECT * FROM movies where movie_id=:movieId")
     suspend fun getMovieWithActorsById(movieId: Int): MovieWithActors
 
@@ -24,6 +23,6 @@ interface MoviesDao {
     suspend fun insertJoin(join: MovieActorCrossRef)
 
     @Query("SELECT * FROM movies")
-    fun getAllMovies(): LiveData<List<MovieEntity>>
+    fun getAllMoviesAndUpdate(): LiveData<List<MovieEntity>>
 
 }

@@ -1,5 +1,6 @@
 package com.bashkevich.androidfundamentals.moviesdetails.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,9 +23,15 @@ class MoviesDetailsViewModel(
     fun loadMovie(movieId: Int) {
         if (_movieLiveData.value?.id != movieId) {
             viewModelScope.launch {
-                val movieWithActors = moviesRepository.findMovieById(movieId)
-
-                _movieLiveData.value = movieWithActors
+                try {
+                    val movieWithActors = moviesRepository.findMovieById(movieId)
+                    _movieLiveData.value = movieWithActors
+                } catch (e: Exception) {
+                    Log.e(
+                        MoviesDetailsViewModel::class.java.simpleName,
+                        "Error in loading movie with id = $movieId ${e.message}"
+                    )
+                }
             }
         }
     }
