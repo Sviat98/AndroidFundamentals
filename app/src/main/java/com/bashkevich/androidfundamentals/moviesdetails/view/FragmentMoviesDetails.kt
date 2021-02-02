@@ -13,8 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bashkevich.androidfundamentals.R
-import com.bashkevich.androidfundamentals.model.RetrofitModule
-import com.bashkevich.androidfundamentals.model.entity.Actor
+import com.bashkevich.androidfundamentals.model.viewobject.Actor
 import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsViewModel
 import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsViewModelFactory
 
@@ -25,7 +24,11 @@ class FragmentMoviesDetails : Fragment() {
 
     private val actorsAdapter = ActorsAdapter()
 
-    private val moviesDetailsViewModel: MoviesDetailsViewModel by viewModels { MoviesDetailsViewModelFactory() }
+    private val moviesDetailsViewModel: MoviesDetailsViewModel by viewModels {
+        MoviesDetailsViewModelFactory(
+            requireContext().applicationContext
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +66,7 @@ class FragmentMoviesDetails : Fragment() {
 
                 ageCategoryView.text = context?.getString(R.string.age_category, movie.minimumAge)
                 titleView.text = movie.title
-                genresView.text = movie.genres?.joinToString { it.name }
+                genresView.text = movie.genres?.joinToString()
                 ratingView.rating = movie.ratings / 2
                 reviewView.text = context?.getString(R.string.reviews, movie.numberOfRatings)
                 descriptionView.text = movie.overview
