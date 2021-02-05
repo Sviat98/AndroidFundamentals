@@ -1,4 +1,4 @@
-package com.bashkevich.androidfundamentals.model.entity
+package com.bashkevich.androidfundamentals.model.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

@@ -1,10 +1,8 @@
-package com.bashkevich.androidfundamentals.model.entity
+package com.bashkevich.androidfundamentals.model.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.bashkevich.androidfundamentals.model.dto.GenreDto
-import kotlinx.serialization.SerialName
 
 @Entity(tableName = "movies")
 class MovieEntity(
@@ -19,8 +17,6 @@ class MovieEntity(
     val backdropPath: String,
     @ColumnInfo(name = "runtime")
     val runtime: Int?,
-    @ColumnInfo(name = "genres")
-    val genres: String?,
     @ColumnInfo(name = "rating")
     val rating: Float,
     @ColumnInfo(name = "vote_count")

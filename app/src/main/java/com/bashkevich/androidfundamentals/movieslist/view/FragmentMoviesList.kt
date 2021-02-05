@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -47,8 +48,12 @@ class FragmentMoviesList : Fragment() {
         setUpMoviesListRecyclerView()
         moviesListViewModel.loadMoviesList()
 
-        moviesListViewModel.moviesListLiveData.observe(this.viewLifecycleOwner) { movies ->
+        moviesListViewModel.moviesListLiveData?.observe(this.viewLifecycleOwner) { movies ->
             setUpMoviesList(movies)
+        }
+
+        moviesListViewModel.errorLiveData.observe(this.viewLifecycleOwner) {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
 
         return view

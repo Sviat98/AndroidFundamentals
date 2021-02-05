@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -43,7 +44,11 @@ class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) 
         holder.duration.text = holder.context.getString(R.string.duration, movie.runtime)
 
         holder.itemView.setOnClickListener {
-            onMovieClickListener.onMovieClick(movie.id)
+            if (movies.map { it.id }.contains(movie.id)) {
+                onMovieClickListener.onMovieClick(movie.id)
+            } else {
+                Toast.makeText(holder.context, "No such movie!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-package com.bashkevich.androidfundamentals.model.dto
+package com.bashkevich.androidfundamentals.model.network.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -13,7 +13,6 @@ data class MovieDto(
     val posterPicture: String?,
     @SerialName("backdrop_path")
     val backdropPicture: String?,
-
     @SerialName("runtime")
     var runtime: Int? = null,
     @SerialName("genres")
