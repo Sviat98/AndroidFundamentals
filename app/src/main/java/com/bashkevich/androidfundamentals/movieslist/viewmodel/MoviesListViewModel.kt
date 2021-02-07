@@ -7,10 +7,12 @@ import com.bashkevich.androidfundamentals.model.viewobject.Movie
 import kotlinx.coroutines.launch
 
 class MoviesListViewModel(private val moviesRepository: MoviesRepository) : ViewModel() {
+    private val _moviesListLiveData = MutableLiveData<List<Movie>>()
 
-    var moviesListLiveData: LiveData<List<Movie>>? = null
+    val moviesListLiveData: LiveData<List<Movie>>
+        get() = _moviesListLiveData
+
     private val _errorLiveData = MutableLiveData<String>()
-
 
     val errorLiveData: LiveData<String>
         get() = _errorLiveData
@@ -18,7 +20,7 @@ class MoviesListViewModel(private val moviesRepository: MoviesRepository) : View
     fun loadMoviesList() {
         viewModelScope.launch {
             try {
-                moviesListLiveData = moviesRepository.getAllMovies().asLiveData()
+                _moviesListLiveData.value = moviesRepository.getAllMovies().asLiveData().value
             } catch (e: Exception) {
                 Log.e(
                     MoviesListViewModel::class.java.simpleName,
