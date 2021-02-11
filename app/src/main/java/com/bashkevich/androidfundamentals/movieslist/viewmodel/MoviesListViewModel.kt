@@ -9,8 +9,8 @@ import kotlinx.coroutines.launch
 class MoviesListViewModel(private val moviesRepository: MoviesRepository) : ViewModel() {
     private val _moviesListLiveData = MutableLiveData<List<Movie>>()
 
-    val moviesListLiveData: LiveData<List<Movie>>
-        get() = _moviesListLiveData
+    var moviesListLiveData: LiveData<List<Movie>>? = null
+    //get() = _moviesListLiveData
 
     private val _errorLiveData = MutableLiveData<String>()
 
@@ -20,7 +20,7 @@ class MoviesListViewModel(private val moviesRepository: MoviesRepository) : View
     fun loadMoviesList() {
         viewModelScope.launch {
             try {
-                _moviesListLiveData.value = moviesRepository.getAllMovies().asLiveData().value
+                moviesListLiveData= moviesRepository.getAllMovies().asLiveData()
             } catch (e: Exception) {
                 Log.e(
                     MoviesListViewModel::class.java.simpleName,
