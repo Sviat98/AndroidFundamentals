@@ -3,7 +3,7 @@ package com.bashkevich.androidfundamentals.moviesdetails.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.bashkevich.androidfundamentals.model.MoviesRepository
+import com.bashkevich.androidfundamentals.model.repository.MoviesRepository
 
 @Suppress("UNCHECKED_CAST")
 class MoviesDetailsViewModelFactory(
