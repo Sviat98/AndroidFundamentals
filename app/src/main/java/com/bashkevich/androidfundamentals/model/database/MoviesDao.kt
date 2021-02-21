@@ -27,4 +27,7 @@ interface MoviesDao {
 
     @Query("SELECT * FROM movies")
     fun getAllMoviesWithGenresAndUpdate(): Flow<List<MovieWithGenres>>
+
+    @Query("SELECT * FROM movies")
+    suspend fun getAllMovies(): List<MovieEntity>
 }

@@ -31,6 +31,9 @@ class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) 
             crossfade(true)
         }
 
+        holder.itemView.transitionName =
+            "${holder.itemView.context.getString(R.string.movie_transition)}${movie.id}"
+
         holder.ageCategory.text = holder.context.getString(R.string.age_category, movie.minimumAge)
 
         holder.title.text = movie.title
@@ -45,12 +48,13 @@ class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) 
 
         holder.itemView.setOnClickListener {
             if (movies.map { it.id }.contains(movie.id)) {
-                onMovieClickListener.onMovieClick(movie.id)
+                onMovieClickListener.onMovieClick(movie.id, holder.itemView)
             } else {
                 Toast.makeText(holder.context, "No such movie!", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
 
     fun bindMovies(newMovies: List<Movie>) {
         movies = newMovies
@@ -74,7 +78,7 @@ class MoviesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 }
 
 interface OnMovieClickListener {
-    fun onMovieClick(movieId: Int)
+    fun onMovieClick(movieId: Int, view: View)
 }
 
 private val RecyclerView.ViewHolder.context

@@ -2,11 +2,15 @@ package com.bashkevich.androidfundamentals.movieslist.view
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.Parcelable
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.doOnPreDraw
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,10 +19,13 @@ import com.bashkevich.androidfundamentals.model.viewobject.Movie
 import com.bashkevich.androidfundamentals.moviesdetails.view.FragmentMoviesDetails
 import com.bashkevich.androidfundamentals.movieslist.viewmodel.MoviesListViewModel
 import com.bashkevich.androidfundamentals.movieslist.viewmodel.MoviesListViewModelFactory
+import com.google.android.material.transition.MaterialElevationScale
 
 
 class FragmentMoviesList : Fragment() {
     private var recyclerView: RecyclerView? = null
+    private var savedRecyclerLayoutState: Parcelable? = null
+
 
     private val moviesListViewModel: MoviesListViewModel by viewModels {
         MoviesListViewModelFactory(
@@ -27,9 +34,22 @@ class FragmentMoviesList : Fragment() {
     }
 
     private val onMovieClickListener = object : OnMovieClickListener {
-        override fun onMovieClick(movieId: Int) {
-            activity?.supportFragmentManager?.beginTransaction()?.addToBackStack(null)
-                ?.add(R.id.main_container, FragmentMoviesDetails.newInstance(movieId))?.commit()
+        override fun onMovieClick(movieId: Int, view: View) {
+            exitTransition = MaterialElevationScale(false).apply {
+                duration =
+                    resources.getInteger(R.integer.shared_element_transition_duration).toLong()
+            }
+
+            reenterTransition = MaterialElevationScale(true).apply {
+                duration =
+                    resources.getInteger(R.integer.shared_element_transition_duration).toLong()
+            }
+
+            activity?.supportFragmentManager?.commit {
+                addSharedElement(view, getString(R.string.movie_transition))
+                addToBackStack(null)
+                replace(R.id.main_container, FragmentMoviesDetails.newInstance(movieId))
+            }
         }
     }
 
@@ -41,7 +61,12 @@ class FragmentMoviesList : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.fragment_movies_list, container, false)
+        return inflater.inflate(R.layout.fragment_movies_list, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
 
         recyclerView = view.findViewById(R.id.movies_recycler_view)
 
@@ -49,14 +74,16 @@ class FragmentMoviesList : Fragment() {
         moviesListViewModel.loadMoviesList()
 
         moviesListViewModel.moviesListLiveData?.observe(this.viewLifecycleOwner) { movies ->
-            setUpMoviesList(movies)
+            movies?.let { setUpMoviesList(it) }
+
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
+            }
         }
 
         moviesListViewModel.errorLiveData.observe(this.viewLifecycleOwner) {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         }
-
-        return view
     }
 
     private fun setUpMoviesListRecyclerView() {
@@ -72,12 +99,48 @@ class FragmentMoviesList : Fragment() {
     }
 
     private fun setUpMoviesList(movies: List<Movie>) {
+
         moviesListAdapter.bindMovies(movies)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
 
-    override fun onDetach() {
-        super.onDetach()
+        if (isStateSaved) {
+            recyclerView?.let {
+                outState.putParcelable(
+                    BUNDLE_RECYCLER_LAYOUT,
+                    it.layoutManager?.onSaveInstanceState()
+                )
+            }
+        } else {
+            arguments = outState
+            recyclerView?.let {
+                arguments?.putParcelable(
+                    BUNDLE_RECYCLER_LAYOUT,
+                    it.layoutManager?.onSaveInstanceState()
+                )
+            }
+        }
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        if (savedInstanceState != null) {
+            savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_RECYCLER_LAYOUT)
+        } else {
+            arguments?.let {
+                savedRecyclerLayoutState = it.getParcelable(BUNDLE_RECYCLER_LAYOUT)
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
         recyclerView = null
+    }
+
+    companion object {
+        const val BUNDLE_RECYCLER_LAYOUT = "BUNDLE_RECYCLER_LAYOUT"
     }
 }

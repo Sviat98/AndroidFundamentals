@@ -19,5 +19,8 @@
     <string name="not_implemented">Not implemented!</string>
     <string name="avengers_reviews">125 reviews</string>
     <string name="avengers_age_category">13 +</string>
-
+    <string name="movie_transition">movieTransition</string>
+    <string name="notification_channel_name">New movies</string>
+    <string name="notification_channel_description">You have incoming movies</string>
+    <string name="notification_description">Rating %1$f</string>
 </resources>
