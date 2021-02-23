@@ -119,11 +119,21 @@ class MovieLoaderWorker(appContext: Context, params: WorkerParameters) : Corouti
 
                 val prevMoviesIds = prevMovies.map { prevMovie -> prevMovie.movieId }
 
+                val newMoviesIds = newMovies.map { newMovie -> newMovie.movieId }
+
+                val moviesIdsToDelete = prevMoviesIds.minus(newMoviesIds)
+
+                moviesIdsToDelete.forEach { movieIdToDelete ->
+                    database.moviesDao.deleteMovieById(movieIdToDelete)
+
+                    database.moviesDao.deleteMovieGenreById(movieIdToDelete)
+
+                    database.moviesDao.deleteMovieActorById(movieIdToDelete)
+                }
+
                 val newMovie =
                     newMovies.filterNot { it.movieId in prevMoviesIds }
                         .maxByOrNull { it.rating }
-
-                Log.d("newMovie", newMovie.toString())
 
                 if (newMovie != null) {
                     val editor = sharedPreferences.edit()

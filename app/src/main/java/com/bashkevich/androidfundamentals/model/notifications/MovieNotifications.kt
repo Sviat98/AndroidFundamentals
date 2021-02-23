@@ -28,7 +28,8 @@ class MovieNotifications(private val appContext: Context) {
             val notificationChannel =
                 NotificationChannelCompat.Builder(CHANNEL_NEW_MOVIES, IMPORTANCE_HIGH)
                     .setName(appContext.getString(R.string.notification_channel_name))
-                    .setDescription(appContext.getString(
+                    .setDescription(
+                        appContext.getString(
                             R.string.notification_channel_description
                         )
                     ).build()
@@ -56,7 +57,7 @@ class MovieNotifications(private val appContext: Context) {
             .setSmallIcon(R.drawable.ic_baseline_local_movies_24)
             .setLargeIcon(testBitmap)
             .setContentTitle(movie.title)
-            .setContentText(appContext.getString(R.string.notification_description))
+            .setContentText(appContext.getString(R.string.notification_description, movie.ratings))
             .setPriority(NotificationCompat.PRIORITY_HIGH).setWhen(System.currentTimeMillis())
             .setStyle(
                 NotificationCompat.BigPictureStyle()
