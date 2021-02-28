@@ -50,34 +50,21 @@ class MovieNotifications(private val appContext: Context) {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-        val testBitmap =
+        val bitmap =
             BitmapFactory.decodeStream(URL(movie.poster).openConnection().getInputStream())
 
         val notification = NotificationCompat.Builder(appContext, CHANNEL_NEW_MOVIES)
             .setSmallIcon(R.drawable.ic_baseline_local_movies_24)
-            .setLargeIcon(testBitmap)
+            .setLargeIcon(bitmap)
             .setContentTitle(movie.title)
             .setContentText(appContext.getString(R.string.notification_description, movie.ratings))
             .setPriority(NotificationCompat.PRIORITY_HIGH).setWhen(System.currentTimeMillis())
             .setStyle(
                 NotificationCompat.BigPictureStyle()
-                    .bigPicture(testBitmap)
+                    .bigPicture(bitmap)
                     .bigLargeIcon(null)
             )
             .setAutoCancel(true).setContentIntent(pendingIntent)
-
-        val loader = ImageLoader(appContext)
-        val req = ImageRequest.Builder(appContext)
-            .data(movie.poster) // demo link
-            .target(
-                onSuccess = { result ->
-                    val bitmap = (result as BitmapDrawable).bitmap
-
-                }
-            )
-            .build()
-
-        loader.enqueue(req)
 
         notificationManagerCompat.notify(MOVIE_TAG, movie.id, notification.build())
     }

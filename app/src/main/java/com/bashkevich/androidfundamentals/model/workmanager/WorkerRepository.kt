@@ -25,7 +25,7 @@ class WorkerRepository {
             .build()
 
     companion object {
-        const val REPEAT_INTERVAL = 1L
+        const val REPEAT_INTERVAL = 12L
         const val NOTIFICATION_INITIAL_DELAY = 5L
     }
 

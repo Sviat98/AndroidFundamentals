@@ -34,9 +34,9 @@ interface MoviesDao {
     @Query("DELETE FROM movies where movie_id=:movieId")
     suspend fun deleteMovieById(movieId: Int)
 
-    @Query("DELETE FROM moviegenrecrossref where movie_id=:movieId")
-    suspend fun deleteMovieGenreById(movieId: Int)
+    @Query("DELETE FROM actors")
+    suspend fun deleteAllActors()
 
-    @Query("DELETE FROM movieactorcrossref where movie_id=:movieId")
-    suspend fun deleteMovieActorById(movieId: Int)
+    @Query("DELETE FROM genres")
+    suspend fun deleteAllGenres()
 }
