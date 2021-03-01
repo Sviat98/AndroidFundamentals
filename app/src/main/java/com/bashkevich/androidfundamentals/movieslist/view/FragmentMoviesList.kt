@@ -34,7 +34,7 @@ class FragmentMoviesList : Fragment() {
     }
 
     private val onMovieClickListener = object : OnMovieClickListener {
-        override fun onMovieClick(movieId: Int, view: View) {
+        override fun onMovieClick(movieId: Int, view: View, titleView: View) {
             exitTransition = MaterialElevationScale(false).apply {
                 duration =
                     resources.getInteger(R.integer.shared_element_transition_duration).toLong()

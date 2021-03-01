@@ -48,7 +48,7 @@ class MoviesListAdapter(private val onMovieClickListener: OnMovieClickListener) 
 
         holder.itemView.setOnClickListener {
             if (movies.map { it.id }.contains(movie.id)) {
-                onMovieClickListener.onMovieClick(movie.id, holder.itemView)
+                onMovieClickListener.onMovieClick(movie.id, holder.itemView, holder.title)
             } else {
                 Toast.makeText(holder.context, "No such movie!", Toast.LENGTH_SHORT).show()
             }
@@ -78,7 +78,7 @@ class MoviesListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 }
 
 interface OnMovieClickListener {
-    fun onMovieClick(movieId: Int, view: View)
+    fun onMovieClick(movieId: Int, view: View, titleView: View)
 }
 
 private val RecyclerView.ViewHolder.context

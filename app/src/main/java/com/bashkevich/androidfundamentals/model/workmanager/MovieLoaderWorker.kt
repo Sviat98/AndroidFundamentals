@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.bashkevich.androidfundamentals.model.database.MoviesDatabase
+import com.bashkevich.androidfundamentals.model.database.entity.GenreEntity
 import com.bashkevich.androidfundamentals.model.database.entity.MovieActorCrossRef
 import com.bashkevich.androidfundamentals.model.database.entity.MovieGenreCrossRef
 import com.bashkevich.androidfundamentals.model.network.RetrofitModule
@@ -27,6 +28,7 @@ class MovieLoaderWorker(appContext: Context, params: WorkerParameters) : Corouti
             var popularMoviesIds: Deferred<List<Int>>
             var topRatedMoviesIds: Deferred<List<Int>>
             var upcomingMoviesIds: Deferred<List<Int>>
+            val genreEntities: Deferred<List<GenreEntity>>
             val moviesFromNetworkIds: List<Int>
 
             val prevMovies = database.moviesDao.getAllMovies()
@@ -38,13 +40,8 @@ class MovieLoaderWorker(appContext: Context, params: WorkerParameters) : Corouti
             }
 
             coroutineScope {
-                launch {
-                    database.moviesDao.deleteAllGenres()
-                    database.moviesDao.deleteAllActors()
-                    val genreEntities =
-                        RetrofitModule.moviesApi.getGenres().genres.map { it.toGenreEntity() }
-
-                    database.moviesDao.insertAllGenres(genreEntities)
+                genreEntities = async {
+                    RetrofitModule.moviesApi.getGenres().genres.map { it.toGenreEntity() }
                 }
 
                 nowPlayingMoviesIds = async {
@@ -66,6 +63,10 @@ class MovieLoaderWorker(appContext: Context, params: WorkerParameters) : Corouti
                 moviesFromNetworkIds = topRatedMoviesIds.await().plus(popularMoviesIds.await())
                     .plus(upcomingMoviesIds.await())
                     .plus(nowPlayingMoviesIds.await()).distinct()
+
+                launch {
+                    database.moviesDao.insertAllGenres(genreEntities.await())
+                }
 
                 moviesFromNetworkIds.forEach { movieId ->
 
