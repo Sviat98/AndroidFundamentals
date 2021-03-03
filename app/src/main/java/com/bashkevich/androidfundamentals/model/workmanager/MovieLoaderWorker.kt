@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.bashkevich.androidfundamentals.model.database.MoviesDatabase
+import com.bashkevich.androidfundamentals.model.database.entity.GenreEntity
 import com.bashkevich.androidfundamentals.model.database.entity.MovieActorCrossRef
 import com.bashkevich.androidfundamentals.model.database.entity.MovieGenreCrossRef
 import com.bashkevich.androidfundamentals.model.network.RetrofitModule
@@ -12,10 +13,7 @@ import com.bashkevich.androidfundamentals.model.repository.toActorEntity
 import com.bashkevich.androidfundamentals.model.repository.toGenreEntity
 import com.bashkevich.androidfundamentals.model.repository.toMovieEntity
 import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class MovieLoaderWorker(appContext: Context, params: WorkerParameters) : CoroutineWorker(
     appContext,
@@ -24,46 +22,53 @@ class MovieLoaderWorker(appContext: Context, params: WorkerParameters) : Corouti
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
             val database = MoviesDatabase.getDatabase(applicationContext)
-            var nowPlayingMoviesIds = listOf<Int>()
-            var popularMoviesIds = listOf<Int>()
-            var topRatedMoviesIds = listOf<Int>()
-            var upcomingMoviesIds = listOf<Int>()
-            val allMoviesIds: List<Int>
+            val sharedPreferences =
+                androidx.preference.PreferenceManager.getDefaultSharedPreferences(applicationContext)
+            var nowPlayingMoviesIds: Deferred<List<Int>>
+            var popularMoviesIds: Deferred<List<Int>>
+            var topRatedMoviesIds: Deferred<List<Int>>
+            var upcomingMoviesIds: Deferred<List<Int>>
+            val genreEntities: Deferred<List<GenreEntity>>
+            val moviesFromNetworkIds: List<Int>
 
-            coroutineScope {
-                launch {
-                    val genreEntities =
-                        RetrofitModule.moviesApi.getGenres().genres.map { it.toGenreEntity() }
+            val prevMovies = database.moviesDao.getAllMovies()
 
-                    database.moviesDao.insertAllGenres(genreEntities)
-                }
-
-                launch {
-                    nowPlayingMoviesIds =
-                        RetrofitModule.moviesApi.getNowPlayingMovies().results.map { it.id }
-                }
-
-                launch {
-                    upcomingMoviesIds =
-                        RetrofitModule.moviesApi.getUpcomingMovies().results.map { it.id }
-                }
-
-                launch {
-                    popularMoviesIds =
-                        RetrofitModule.moviesApi.getPopularMovies().results.map { it.id }
-                }
-
-                launch {
-                    topRatedMoviesIds =
-                        RetrofitModule.moviesApi.getTopRatedMovies().results.map { it.id }
-                }
+            if (sharedPreferences.getInt(NEW_MOVIE_ID, 0) != 0) {
+                val editor = sharedPreferences.edit()
+                editor.remove(NEW_MOVIE_ID)
+                editor.apply()
             }
 
-            allMoviesIds = topRatedMoviesIds.plus(popularMoviesIds).plus(upcomingMoviesIds)
-                .plus(nowPlayingMoviesIds).distinct()
+            coroutineScope {
+                genreEntities = async {
+                    RetrofitModule.moviesApi.getGenres().genres.map { it.toGenreEntity() }
+                }
 
-            allMoviesIds.forEach { movieId ->
-                coroutineScope {
+                nowPlayingMoviesIds = async {
+                    RetrofitModule.moviesApi.getNowPlayingMovies().results.map { it.id }
+                }
+
+                upcomingMoviesIds = async {
+                    RetrofitModule.moviesApi.getUpcomingMovies().results.map { it.id }
+                }
+
+                popularMoviesIds = async {
+                    RetrofitModule.moviesApi.getPopularMovies().results.map { it.id }
+                }
+
+                topRatedMoviesIds = async {
+                    RetrofitModule.moviesApi.getTopRatedMovies().results.map { it.id }
+                }
+
+                moviesFromNetworkIds = topRatedMoviesIds.await().plus(popularMoviesIds.await())
+                    .plus(upcomingMoviesIds.await())
+                    .plus(nowPlayingMoviesIds.await()).distinct()
+
+                launch {
+                    database.moviesDao.insertAllGenres(genreEntities.await())
+                }
+
+                moviesFromNetworkIds.forEach { movieId ->
 
                     val movieDto = RetrofitModule.moviesApi.getMovieById(movieId)
 
@@ -72,6 +77,7 @@ class MovieLoaderWorker(appContext: Context, params: WorkerParameters) : Corouti
                     database.moviesDao.insertMovie(movieEntity)
 
                     launch {
+
                         val actorsEntities =
                             RetrofitModule.moviesApi.getActors(movieId).cast.filter { it.profilePicture != null }
                                 .map { it.toActorEntity() }
@@ -103,6 +109,28 @@ class MovieLoaderWorker(appContext: Context, params: WorkerParameters) : Corouti
                         }
                     }
                 }
+
+                if (prevMovies.isNotEmpty()) {
+
+                    val prevMoviesIds = prevMovies.map { prevMovie -> prevMovie.movieId }
+
+                    val moviesIdsToDelete = prevMoviesIds.minus(moviesFromNetworkIds)
+
+                    moviesIdsToDelete.forEach { movieIdToDelete ->
+                        database.moviesDao.deleteMovieById(movieIdToDelete)
+                    }
+
+                    val newMovie =
+                        moviesFromNetworkIds.filterNot { it in prevMoviesIds }
+                            .map { database.moviesDao.getMovieWithGenresAndActorsById(it) }
+                            .maxByOrNull { it.movie.rating }
+
+                    if (newMovie != null) {
+                        val editor = sharedPreferences.edit()
+                        editor.putInt(NEW_MOVIE_ID, newMovie.movie.movieId)
+                        editor.apply()
+                    }
+                }
             }
             return@withContext Result.success()
         } catch (e: Exception) {
@@ -112,6 +140,10 @@ class MovieLoaderWorker(appContext: Context, params: WorkerParameters) : Corouti
             )
             return@withContext Result.failure()
         }
+    }
 
+    companion object {
+        const val UPDATE_MOVIES = "update_movies"
+        const val NEW_MOVIE_ID = "new_movie_id"
     }
 }

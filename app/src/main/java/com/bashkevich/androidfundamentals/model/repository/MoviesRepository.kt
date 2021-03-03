@@ -1,6 +1,7 @@
 package com.bashkevich.androidfundamentals.model.repository
 
 import android.content.Context
+import android.util.Log
 import com.bashkevich.androidfundamentals.model.database.MoviesDatabase
 import com.bashkevich.androidfundamentals.model.network.dto.ActorDto
 import com.bashkevich.androidfundamentals.model.network.dto.GenreDto
@@ -12,6 +13,7 @@ import com.bashkevich.androidfundamentals.model.viewobject.Movie
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 
 class MoviesRepository(applicationContext: Context) {

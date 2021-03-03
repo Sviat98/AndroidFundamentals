@@ -1,6 +1,8 @@
 package com.bashkevich.androidfundamentals.moviesdetails.view
 
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,7 @@ import com.bashkevich.androidfundamentals.R
 import com.bashkevich.androidfundamentals.model.viewobject.Actor
 import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsViewModel
 import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsViewModelFactory
+import com.google.android.material.transition.MaterialContainerTransform
 
 
 class FragmentMoviesDetails : Fragment() {
@@ -36,6 +38,12 @@ class FragmentMoviesDetails : Fragment() {
         arguments?.let {
             movieId = it.getInt(PARAM_MOVIE_ID)
         }
+
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            drawingViewId = R.id.main_container
+            duration = 1_000
+            scrimColor = Color.TRANSPARENT
+        }
     }
 
     override fun onCreateView(
@@ -44,8 +52,11 @@ class FragmentMoviesDetails : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_movies_details, container, false)
+        return inflater.inflate(R.layout.fragment_movies_details, container, false)
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val backdropView = view.findViewById<ImageView>(R.id.backdrop_details)
         val ageCategoryView = view.findViewById<TextView>(R.id.age_category)
         val titleView = view.findViewById<TextView>(R.id.title_details)
@@ -72,21 +83,19 @@ class FragmentMoviesDetails : Fragment() {
                 reviewView.text = context?.getString(R.string.reviews, movie.numberOfRatings)
                 descriptionView.text = movie.overview
 
-
                 val actors = movie.actors
 
-                if (actors == null) {
-                    castView.visibility = View.GONE
-                } else {
-                    setUpActors(actors)
+                if (actors != null) {
+                    if (actors.isEmpty()) {
+                        castView.visibility = View.GONE
+                    } else {
+                        setUpActors(actors)
+                    }
                 }
 
             }
         }
         movieId?.let { moviesDetailsViewModel.loadMovie(it) }
-
-        return view
-
     }
 
     private fun setUpActors(actors: List<Actor>) {
@@ -108,7 +117,6 @@ class FragmentMoviesDetails : Fragment() {
 
     companion object {
         private const val PARAM_MOVIE_ID = "movieId"
-
 
         fun newInstance(
             movieId: Int

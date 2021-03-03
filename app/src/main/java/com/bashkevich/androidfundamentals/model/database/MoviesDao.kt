@@ -27,4 +27,16 @@ interface MoviesDao {
 
     @Query("SELECT * FROM movies")
     fun getAllMoviesWithGenresAndUpdate(): Flow<List<MovieWithGenres>>
+
+    @Query("SELECT * FROM movies")
+    suspend fun getAllMovies(): List<MovieEntity>
+
+    @Query("DELETE FROM movies where movie_id=:movieId")
+    suspend fun deleteMovieById(movieId: Int)
+
+    @Query("DELETE FROM actors")
+    suspend fun deleteAllActors()
+
+    @Query("DELETE FROM genres")
+    suspend fun deleteAllGenres()
 }

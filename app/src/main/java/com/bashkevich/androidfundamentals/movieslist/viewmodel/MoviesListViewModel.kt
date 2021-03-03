@@ -4,13 +4,13 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.bashkevich.androidfundamentals.model.repository.MoviesRepository
 import com.bashkevich.androidfundamentals.model.viewobject.Movie
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 class MoviesListViewModel(private val moviesRepository: MoviesRepository) : ViewModel() {
     private val _moviesListLiveData = MutableLiveData<List<Movie>>()
 
     var moviesListLiveData: LiveData<List<Movie>>? = null
-    //get() = _moviesListLiveData
 
     private val _errorLiveData = MutableLiveData<String>()
 
@@ -20,7 +20,8 @@ class MoviesListViewModel(private val moviesRepository: MoviesRepository) : View
     fun loadMoviesList() {
         viewModelScope.launch {
             try {
-                moviesListLiveData= moviesRepository.getAllMovies().asLiveData()
+                moviesListLiveData = moviesRepository.getAllMovies().asLiveData()
+
             } catch (e: Exception) {
                 Log.e(
                     MoviesListViewModel::class.java.simpleName,
