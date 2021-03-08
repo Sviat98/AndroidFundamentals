@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.bashkevich.androidfundamentals.R
+import com.bashkevich.androidfundamentals.databinding.FragmentMoviesDetailsBinding
+import com.bashkevich.androidfundamentals.databinding.FragmentMoviesListBinding
 import com.bashkevich.androidfundamentals.model.viewobject.Actor
 import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsViewModel
 import com.bashkevich.androidfundamentals.moviesdetails.viewmodel.MoviesDetailsViewModelFactory
@@ -26,6 +28,10 @@ class FragmentMoviesDetails : Fragment() {
     private var movieId: Int? = null
 
     private val actorsAdapter = ActorsAdapter()
+
+    private var _binding: FragmentMoviesDetailsBinding? = null
+
+    private val binding get() = _binding!!
 
     private val moviesDetailsViewModel: MoviesDetailsViewModel by viewModels {
         MoviesDetailsViewModelFactory(
@@ -52,19 +58,12 @@ class FragmentMoviesDetails : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movies_details, container, false)
+        _binding = FragmentMoviesDetailsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val backdropView = view.findViewById<ImageView>(R.id.backdrop_details)
-        val ageCategoryView = view.findViewById<TextView>(R.id.age_category)
-        val titleView = view.findViewById<TextView>(R.id.title_details)
-        val genresView = view.findViewById<TextView>(R.id.genres_details)
-        val ratingView = view.findViewById<RatingBar>(R.id.movie_rating_details)
-        val reviewView = view.findViewById<TextView>(R.id.reviews_details)
-        val descriptionView = view.findViewById<TextView>(R.id.description_details)
-        val castView = view.findViewById<TextView>(R.id.cast)
         actorsRecyclerView = view.findViewById(R.id.actors_recycler_view)
 
         setUpActorsRecyclerView()
@@ -72,22 +71,24 @@ class FragmentMoviesDetails : Fragment() {
         moviesDetailsViewModel.movieLiveData.observe(this.viewLifecycleOwner) { selectedMovie ->
             selectedMovie?.let { movie ->
 
-                backdropView.load(movie.backdrop) {
+                binding.backdropDetails.load(movie.backdrop) {
                     crossfade(true)
                 }
 
-                ageCategoryView.text = context?.getString(R.string.age_category, movie.minimumAge)
-                titleView.text = movie.title
-                genresView.text = movie.genres?.joinToString()
-                ratingView.rating = movie.ratings / 2
-                reviewView.text = context?.getString(R.string.reviews, movie.numberOfRatings)
-                descriptionView.text = movie.overview
+                binding.ageCategory.text =
+                    context?.getString(R.string.age_category, movie.minimumAge)
+                binding.titleDetails.text = movie.title
+                binding.genresDetails.text = movie.genres?.joinToString()
+                binding.movieRatingDetails.rating = movie.ratings / 2
+                binding.reviewsDetails.text =
+                    context?.getString(R.string.reviews, movie.numberOfRatings)
+                binding.descriptionDetails.text = movie.overview
 
                 val actors = movie.actors
 
                 if (actors != null) {
                     if (actors.isEmpty()) {
-                        castView.visibility = View.GONE
+                        binding.cast.visibility = View.GONE
                     } else {
                         setUpActors(actors)
                     }
@@ -103,16 +104,16 @@ class FragmentMoviesDetails : Fragment() {
     }
 
     private fun setUpActorsRecyclerView() {
-        actorsRecyclerView?.adapter = actorsAdapter
+        binding.actorsRecyclerView.adapter = actorsAdapter
 
-        actorsRecyclerView?.addItemDecoration(ActorsDecoration())
-        actorsRecyclerView?.layoutManager =
+        binding.actorsRecyclerView.addItemDecoration(ActorsDecoration())
+        binding.actorsRecyclerView.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        actorsRecyclerView = null
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

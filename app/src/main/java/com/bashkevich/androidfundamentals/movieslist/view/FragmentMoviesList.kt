@@ -3,7 +3,6 @@ package com.bashkevich.androidfundamentals.movieslist.view
 import android.content.res.Configuration
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +14,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bashkevich.androidfundamentals.*
+import com.bashkevich.androidfundamentals.databinding.FragmentMoviesListBinding
 import com.bashkevich.androidfundamentals.model.viewobject.Movie
 import com.bashkevich.androidfundamentals.moviesdetails.view.FragmentMoviesDetails
 import com.bashkevich.androidfundamentals.movieslist.viewmodel.MoviesListViewModel
@@ -23,9 +23,11 @@ import com.google.android.material.transition.MaterialElevationScale
 
 
 class FragmentMoviesList : Fragment() {
-    private var recyclerView: RecyclerView? = null
     private var savedRecyclerLayoutState: Parcelable? = null
 
+    private var _binding: FragmentMoviesListBinding? = null
+
+    private val binding get() = _binding!!
 
     private val moviesListViewModel: MoviesListViewModel by viewModels {
         MoviesListViewModelFactory(
@@ -34,7 +36,7 @@ class FragmentMoviesList : Fragment() {
     }
 
     private val onMovieClickListener = object : OnMovieClickListener {
-        override fun onMovieClick(movieId: Int, view: View, titleView: View) {
+        override fun onMovieClick(movieId: Int, view: View) {
             exitTransition = MaterialElevationScale(false).apply {
                 duration =
                     resources.getInteger(R.integer.shared_element_transition_duration).toLong()
@@ -60,15 +62,13 @@ class FragmentMoviesList : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        return inflater.inflate(R.layout.fragment_movies_list, container, false)
+        _binding = FragmentMoviesListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
-
-        recyclerView = view.findViewById(R.id.movies_recycler_view)
 
         setUpMoviesListRecyclerView()
         moviesListViewModel.loadMoviesList()
@@ -93,9 +93,9 @@ class FragmentMoviesList : Fragment() {
             } else {
                 2
             }
-        recyclerView?.layoutManager = GridLayoutManager(context, spanCount)
-        recyclerView?.adapter = moviesListAdapter
-        recyclerView?.addItemDecoration(MoviesDecoration())
+        binding.moviesRecyclerView.layoutManager = GridLayoutManager(context, spanCount)
+        binding.moviesRecyclerView.adapter = moviesListAdapter
+        binding.moviesRecyclerView.addItemDecoration(MoviesDecoration())
     }
 
     private fun setUpMoviesList(movies: List<Movie>) {
@@ -107,20 +107,16 @@ class FragmentMoviesList : Fragment() {
         super.onSaveInstanceState(outState)
 
         if (isStateSaved) {
-            recyclerView?.let {
-                outState.putParcelable(
-                    BUNDLE_RECYCLER_LAYOUT,
-                    it.layoutManager?.onSaveInstanceState()
-                )
-            }
+            outState.putParcelable(
+                BUNDLE_RECYCLER_LAYOUT,
+                binding.moviesRecyclerView.layoutManager?.onSaveInstanceState()
+            )
         } else {
             arguments = outState
-            recyclerView?.let {
-                arguments?.putParcelable(
-                    BUNDLE_RECYCLER_LAYOUT,
-                    it.layoutManager?.onSaveInstanceState()
-                )
-            }
+            arguments?.putParcelable(
+                BUNDLE_RECYCLER_LAYOUT,
+                binding.moviesRecyclerView.layoutManager?.onSaveInstanceState()
+            )
         }
     }
 
@@ -137,7 +133,7 @@ class FragmentMoviesList : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        recyclerView = null
+        _binding = null
     }
 
     companion object {
